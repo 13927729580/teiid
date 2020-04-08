@@ -26,39 +26,39 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Marketdata implements Serializable {
-	
-	private static final long serialVersionUID = 1783712327461134953L;
 
-	@Id
-	private String id;
-	@ManyToOne
-	private Stock stock;
-	private BigDecimal price;
-	@ManyToOne
-	private Exchange exchange;
-	
-	public Stock getStock() {
+    private static final long serialVersionUID = 1783712327461134953L;
+
+    @Id
+    private String id;
+    @ManyToOne
+    private Stock stock;
+    private BigDecimal price;
+    @ManyToOne
+    private Exchange exchange;
+
+    public Stock getStock() {
         return stock;
     }
-	
-	public void setStock(Stock stock) {
+
+    public void setStock(Stock stock) {
         this.stock = stock;
     }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-	
-	public Exchange getExchange() {
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Exchange getExchange() {
         return exchange;
     }
-	
-	public void setExchange(Exchange exchange) {
+
+    public void setExchange(Exchange exchange) {
         this.exchange = exchange;
     }
-	
+
 }

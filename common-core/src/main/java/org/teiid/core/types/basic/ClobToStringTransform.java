@@ -31,14 +31,14 @@ import org.teiid.core.types.TransformationException;
 
 public class ClobToStringTransform extends AnyToStringTransform {
 
-	public ClobToStringTransform() {
-		super(DefaultDataClasses.CLOB);
-	}
-	
+    public ClobToStringTransform() {
+        super(DefaultDataClasses.CLOB);
+    }
+
     public ClobToStringTransform(Class<? extends BaseClobType> fromType) {
         super(fromType);
     }
-	
+
     /**
      * This method transforms a value of the source type into a value
      * of the target type.
@@ -53,28 +53,28 @@ public class ClobToStringTransform extends AnyToStringTransform {
         try {
             reader = new BufferedReader (source.getCharacterStream());
             StringBuffer contents = new StringBuffer();
-            
+
             int chr = reader.read();
             while (chr != -1 && contents.length() < DataTypeManager.MAX_STRING_LENGTH) {
                 contents.append((char)chr);
                 chr = reader.read();
             }
-            return contents.toString();         
+            return contents.toString();
         } catch (SQLException e) {
               throw new TransformationException(CorePlugin.Event.TEIID10080, e, CorePlugin.Util.gs(CorePlugin.Event.TEIID10080, new Object[] {getSourceType().getName(), getTargetType().getName()}));
         } catch(IOException e) {
               throw new TransformationException(CorePlugin.Event.TEIID10080, e, CorePlugin.Util.gs(CorePlugin.Event.TEIID10080, new Object[] {getSourceType().getName(), getTargetType().getName()}));
         } finally {
-        	if (reader != null) {
-        		try {
-					reader.close();
-				} catch (IOException e) {
-				}
-        	}
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                }
+            }
         }
     }
 
-    /** 
+    /**
      * @see org.teiid.core.types.Transform#isExplicit()
      */
     public boolean isExplicit() {

@@ -29,32 +29,32 @@ import org.teiid.services.AbstractEventDistributorFactoryService;
 import org.teiid.services.InternalEventDistributorFactory;
 
 public class EventDistributorFactoryService extends AbstractEventDistributorFactoryService implements Service<InternalEventDistributorFactory> {
-	
-	InjectedValue<ObjectReplicator> objectReplicatorInjector = new InjectedValue<ObjectReplicator>();
-	InjectedValue<VDBRepository> vdbRepositoryInjector = new InjectedValue<VDBRepository>();
-	DQPCore dqpCore;
-		
-	@Override
-	public void start(StartContext context) throws StartException {
-		start();
-	}
 
-	@Override
-	public void stop(StopContext context) {
-		stop();
-	}
-	
-	@Override
-	protected ObjectReplicator getObjectReplicator() {
-		return objectReplicatorInjector.getValue();
-	}
-	
-	@Override
-	protected VDBRepository getVdbRepository() {
-		return vdbRepositoryInjector.getValue();
-	}
-	
-	@Override
+    InjectedValue<ObjectReplicator> objectReplicatorInjector = new InjectedValue<ObjectReplicator>();
+    InjectedValue<VDBRepository> vdbRepositoryInjector = new InjectedValue<VDBRepository>();
+    DQPCore dqpCore;
+
+    @Override
+    public void start(StartContext context) throws StartException {
+        start();
+    }
+
+    @Override
+    public void stop(StopContext context) {
+        stop();
+    }
+
+    @Override
+    protected ObjectReplicator getObjectReplicator() {
+        return objectReplicatorInjector.getValue();
+    }
+
+    @Override
+    protected VDBRepository getVdbRepository() {
+        return vdbRepositoryInjector.getValue();
+    }
+
+    @Override
     protected DQPCore getDQPCore() {
         return dqpCore;
     }

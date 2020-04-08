@@ -27,75 +27,75 @@ import org.teiid.resource.spi.BasicManagedConnectionFactory;
 
 public class AccumuloManagedConnectionFactory extends BasicManagedConnectionFactory{
 
-	private static final long serialVersionUID = 1608787576847881344L;
+    private static final long serialVersionUID = 1608787576847881344L;
 
-	public static final BundleUtil UTIL = BundleUtil.getBundleUtil(AccumuloManagedConnectionFactory.class);
-	
-	private String instanceName;
-	private String zooKeeperServerList;
-	private String username;
-	private String password;
-	private String roles;
-	
-	@Override
-	public BasicConnectionFactory<AccumuloConnectionImpl> createConnectionFactory() throws ResourceException {
-		return new AccumuloConnectionFactory(this);
-	}
+    public static final BundleUtil UTIL = BundleUtil.getBundleUtil(AccumuloManagedConnectionFactory.class);
 
-	class AccumuloConnectionFactory extends BasicConnectionFactory<AccumuloConnectionImpl>{
-		private static final long serialVersionUID = 831361159531236916L;
-		private ZooKeeperInstance instance;
-		private AccumuloManagedConnectionFactory mcf;
-		
-		public AccumuloConnectionFactory(AccumuloManagedConnectionFactory mcf) {
-			this.mcf = mcf;
-			this.instance = new ZooKeeperInstance(mcf.getInstanceName(), mcf.getZooKeeperServerList());		
-		}
-		@Override
-		public AccumuloConnectionImpl getConnection() throws ResourceException {
-			return new AccumuloConnectionImpl(this.mcf, this.instance);
-		}
-	}
-	
-	public String getInstanceName() {
-		return instanceName;
-	}
+    private String instanceName;
+    private String zooKeeperServerList;
+    private String username;
+    private String password;
+    private String roles;
 
-	public void setInstanceName(String instanceName) {
-		this.instanceName = instanceName;
-	}
+    @Override
+    public BasicConnectionFactory<AccumuloConnectionImpl> createConnectionFactory() throws ResourceException {
+        return new AccumuloConnectionFactory(this);
+    }
 
-	public String getZooKeeperServerList() {
-		return zooKeeperServerList;
-	}
+    class AccumuloConnectionFactory extends BasicConnectionFactory<AccumuloConnectionImpl>{
+        private static final long serialVersionUID = 831361159531236916L;
+        private ZooKeeperInstance instance;
+        private AccumuloManagedConnectionFactory mcf;
 
-	public void setZooKeeperServerList(String zooKeeperServerList) {
-		this.zooKeeperServerList = zooKeeperServerList;
-	}
+        public AccumuloConnectionFactory(AccumuloManagedConnectionFactory mcf) {
+            this.mcf = mcf;
+            this.instance = new ZooKeeperInstance(mcf.getInstanceName(), mcf.getZooKeeperServerList());
+        }
+        @Override
+        public AccumuloConnectionImpl getConnection() throws ResourceException {
+            return new AccumuloConnectionImpl(this.mcf, this.instance);
+        }
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getInstanceName() {
+        return instanceName;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getZooKeeperServerList() {
+        return zooKeeperServerList;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setZooKeeperServerList(String zooKeeperServerList) {
+        this.zooKeeperServerList = zooKeeperServerList;
+    }
 
-	public String getRoles() {
-		return roles;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setRoles(String roles) {
-		this.roles = roles;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
 
     @Override
     public int hashCode() {

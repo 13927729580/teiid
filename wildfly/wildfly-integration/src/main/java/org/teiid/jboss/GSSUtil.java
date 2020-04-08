@@ -44,11 +44,10 @@ class GSSUtil {
     private static final Method CREATE_SUBJECT_METHOD = getCreateSubjectMethod();
     private static final String SUN_GSSUTIL = "com.sun.security.jgss.GSSUtil";
     private static final String CREATE_SUBJECT = "createSubject";
-    
+
     /**
      * Populate the supplied {@link Subject} based on the supplied {@link GSSCredential}
      *
-     * @param subject - The Subject to populate.
      * @param delegatedCredential - The GSSCredential to use for population.
      * @param privateCredential The optional {@link GSSCredential} to add to the private credentials of the {@link Subject}.
      * @return A {@link Subject} that was created from the GSSCredential so that we can identify the content to remove later.
@@ -72,7 +71,7 @@ class GSSUtil {
     }
 
 
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     static Method createSubjectMethod() {
         try {
@@ -89,18 +88,18 @@ class GSSUtil {
             return null;
         }
     }
-    
+
     static Method getCreateSubjectMethod() {
         if (System.getSecurityManager() == null) {
             return createSubjectMethod();
         }
-        return AccessController.doPrivileged(new PrivilegedAction<Method>() { 
+        return AccessController.doPrivileged(new PrivilegedAction<Method>() {
             public Method run() {
                 return createSubjectMethod();
             }
-        });  
+        });
     }
-    
+
     static Subject invokeCreateSubject(Method createSubjectMethod,
             GSSName gssName, GSSCredential gssCredential) throws GSSException {
         try {
@@ -119,8 +118,8 @@ class GSSUtil {
             log.debug(cause);
             return null;
         }
-    } 
-    
+    }
+
     static Subject createSubjectMethod(final Method createSubjectMethod,
             final GSSName gssName, final GSSCredential gssCredential) throws GSSException {
         if (System.getSecurityManager() == null) {
@@ -134,6 +133,6 @@ class GSSUtil {
             });
         } catch (PrivilegedActionException e) {
             throw (GSSException) e.getCause();
-        }        
-    }    
+        }
+    }
 }

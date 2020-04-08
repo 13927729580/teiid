@@ -61,15 +61,15 @@ import org.teiid.util.CharsetUtils;
 
 @Translator(name="file", description="File Translator, reads contents of files or writes to them")
 public class FileExecutionFactory extends ExecutionFactory<ConnectionFactory, VirtualFileConnection> {
-	
+
     private final class VirtualFileProcedureExecution implements ProcedureExecution {
-        
+
         private final Call command;
         private final VirtualFileConnection conn;
         private VirtualFile[] files = null;
         boolean isText = false;
         private int index;
-        
+
         private VirtualFileProcedureExecution(Call command, VirtualFileConnection conn) {
             this.command = command;
             this.conn = conn;
@@ -122,7 +122,7 @@ public class FileExecutionFactory extends ExecutionFactory<ConnectionFactory, Vi
                 }
             }
         }
-        
+
         @Override
         public List<?> next() throws TranslatorException, DataNotAvailableException {
             if (files == null || index >= files.length) {
@@ -151,11 +151,11 @@ public class FileExecutionFactory extends ExecutionFactory<ConnectionFactory, Vi
         }
 
         @Override
-        public void close() {            
+        public void close() {
         }
 
         @Override
-        public void cancel() throws TranslatorException {            
+        public void cancel() throws TranslatorException {
         }
 
         @Override
@@ -164,82 +164,82 @@ public class FileExecutionFactory extends ExecutionFactory<ConnectionFactory, Vi
         }
     }
 
-	public static BundleUtil UTIL = BundleUtil.getBundleUtil(FileExecutionFactory.class);
-	
-	public static final String GETTEXTFILES = "getTextFiles"; //$NON-NLS-1$
-	public static final String GETFILES = "getFiles"; //$NON-NLS-1$
-	public static final String SAVEFILE = "saveFile"; //$NON-NLS-1$
-	public static final String DELETEFILE = "deleteFile"; //$NON-NLS-1$
-	
-	private Charset encoding = Charset.defaultCharset();
-	private boolean exceptionIfFileNotFound = true;
-	
-	public FileExecutionFactory() {
-		setTransactionSupport(TransactionSupport.NONE);
-		setSourceRequiredForMetadata(false);
-	}
-	
-	@TranslatorProperty(display="File Encoding",advanced=true)
-	public String getEncoding() {
-		return encoding.name();
-	}
-	
-	public void setEncoding(String encoding) {
-		this.encoding = CharsetUtils.getCharset(encoding);
-	}
-	
-	@TranslatorProperty(display="Exception if file not found",advanced=true)
-	public boolean isExceptionIfFileNotFound() {
-		return exceptionIfFileNotFound;
-	}
-	
-	public void setExceptionIfFileNotFound(boolean exceptionIfFileNotFound) {
-		this.exceptionIfFileNotFound = exceptionIfFileNotFound;
-	}
-	
-	//@Override
-	public ProcedureExecution createProcedureExecution(final Call command,
-			final ExecutionContext executionContext, final RuntimeMetadata metadata,
-			final VirtualFileConnection conn) throws TranslatorException {
-	    return new VirtualFileProcedureExecution(command, conn);
-	}
+    public static BundleUtil UTIL = BundleUtil.getBundleUtil(FileExecutionFactory.class);
 
-	@Override
-	public void getMetadata(MetadataFactory metadataFactory, VirtualFileConnection connection) throws TranslatorException {
-		Procedure p = metadataFactory.addProcedure(GETTEXTFILES);
-		p.setAnnotation("Returns text files that match the given path and pattern as CLOBs"); //$NON-NLS-1$
-		ProcedureParameter param = metadataFactory.addProcedureParameter("pathAndPattern", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p); //$NON-NLS-1$
-		param.setAnnotation("The path and pattern of what files to return.  Currently the only pattern supported is *.<ext>, which returns only the files matching the given extension at the given path."); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("file", TypeFacility.RUNTIME_NAMES.CLOB, p); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("filePath", TypeFacility.RUNTIME_NAMES.STRING, p); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("lastModified", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p); //$NON-NLS-1$
+    public static final String GETTEXTFILES = "getTextFiles"; //$NON-NLS-1$
+    public static final String GETFILES = "getFiles"; //$NON-NLS-1$
+    public static final String SAVEFILE = "saveFile"; //$NON-NLS-1$
+    public static final String DELETEFILE = "deleteFile"; //$NON-NLS-1$
+
+    private Charset encoding = Charset.defaultCharset();
+    private boolean exceptionIfFileNotFound = true;
+
+    public FileExecutionFactory() {
+        setTransactionSupport(TransactionSupport.NONE);
+        setSourceRequiredForMetadata(false);
+    }
+
+    @TranslatorProperty(display="File Encoding",advanced=true)
+    public String getEncoding() {
+        return encoding.name();
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = CharsetUtils.getCharset(encoding);
+    }
+
+    @TranslatorProperty(display="Exception if file not found",advanced=true)
+    public boolean isExceptionIfFileNotFound() {
+        return exceptionIfFileNotFound;
+    }
+
+    public void setExceptionIfFileNotFound(boolean exceptionIfFileNotFound) {
+        this.exceptionIfFileNotFound = exceptionIfFileNotFound;
+    }
+
+    //@Override
+    public ProcedureExecution createProcedureExecution(final Call command,
+            final ExecutionContext executionContext, final RuntimeMetadata metadata,
+            final VirtualFileConnection conn) throws TranslatorException {
+        return new VirtualFileProcedureExecution(command, conn);
+    }
+
+    @Override
+    public void getMetadata(MetadataFactory metadataFactory, VirtualFileConnection connection) throws TranslatorException {
+        Procedure p = metadataFactory.addProcedure(GETTEXTFILES);
+        p.setAnnotation("Returns text files that match the given path and pattern as CLOBs"); //$NON-NLS-1$
+        ProcedureParameter param = metadataFactory.addProcedureParameter("pathAndPattern", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p); //$NON-NLS-1$
+        param.setAnnotation("The path and pattern of what files to return.  Currently the only pattern supported is *.<ext>, which returns only the files matching the given extension at the given path."); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("file", TypeFacility.RUNTIME_NAMES.CLOB, p); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("filePath", TypeFacility.RUNTIME_NAMES.STRING, p); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("lastModified", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p); //$NON-NLS-1$
         metadataFactory.addProcedureResultSetColumn("created", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p); //$NON-NLS-1$
         metadataFactory.addProcedureResultSetColumn("size", TypeFacility.RUNTIME_NAMES.LONG, p); //$NON-NLS-1$
-		
-		Procedure p1 = metadataFactory.addProcedure(GETFILES);
-		p1.setAnnotation("Returns files that match the given path and pattern as BLOBs"); //$NON-NLS-1$
-		param = metadataFactory.addProcedureParameter("pathAndPattern", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p1); //$NON-NLS-1$
-		param.setAnnotation("The path and pattern of what files to return.  Currently the only pattern supported is *.<ext>, which returns only the files matching the given extension at the given path."); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("file", TypeFacility.RUNTIME_NAMES.BLOB, p1); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("filePath", TypeFacility.RUNTIME_NAMES.STRING, p1); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("lastModified", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p1); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("created", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p1); //$NON-NLS-1$
-		metadataFactory.addProcedureResultSetColumn("size", TypeFacility.RUNTIME_NAMES.LONG, p1); //$NON-NLS-1$
-		
-		Procedure p2 = metadataFactory.addProcedure(SAVEFILE);
-		p2.setAnnotation("Saves the given value to the given path.  Any existing file will be overriden."); //$NON-NLS-1$
-		metadataFactory.addProcedureParameter("filePath", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p2); //$NON-NLS-1$
-		param = metadataFactory.addProcedureParameter("file", TypeFacility.RUNTIME_NAMES.OBJECT, Type.In, p2); //$NON-NLS-1$
-		param.setAnnotation("The contents to save.  Can be one of CLOB, BLOB, or XML"); //$NON-NLS-1$
-		
-		Procedure p3 = metadataFactory.addProcedure(DELETEFILE);
-		p3.setAnnotation("Delete the given file path. "); //$NON-NLS-1$
-		metadataFactory.addProcedureParameter("filePath", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p3); //$NON-NLS-1$	
-	} 
-	
-	@Override
-	public boolean areLobsUsableAfterClose() {
-		return true;
-	}
-	
+
+        Procedure p1 = metadataFactory.addProcedure(GETFILES);
+        p1.setAnnotation("Returns files that match the given path and pattern as BLOBs"); //$NON-NLS-1$
+        param = metadataFactory.addProcedureParameter("pathAndPattern", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p1); //$NON-NLS-1$
+        param.setAnnotation("The path and pattern of what files to return.  Currently the only pattern supported is *.<ext>, which returns only the files matching the given extension at the given path."); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("file", TypeFacility.RUNTIME_NAMES.BLOB, p1); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("filePath", TypeFacility.RUNTIME_NAMES.STRING, p1); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("lastModified", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p1); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("created", TypeFacility.RUNTIME_NAMES.TIMESTAMP, p1); //$NON-NLS-1$
+        metadataFactory.addProcedureResultSetColumn("size", TypeFacility.RUNTIME_NAMES.LONG, p1); //$NON-NLS-1$
+
+        Procedure p2 = metadataFactory.addProcedure(SAVEFILE);
+        p2.setAnnotation("Saves the given value to the given path.  Any existing file will be overriden."); //$NON-NLS-1$
+        metadataFactory.addProcedureParameter("filePath", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p2); //$NON-NLS-1$
+        param = metadataFactory.addProcedureParameter("file", TypeFacility.RUNTIME_NAMES.OBJECT, Type.In, p2); //$NON-NLS-1$
+        param.setAnnotation("The contents to save.  Can be one of CLOB, BLOB, or XML"); //$NON-NLS-1$
+
+        Procedure p3 = metadataFactory.addProcedure(DELETEFILE);
+        p3.setAnnotation("Delete the given file path. "); //$NON-NLS-1$
+        metadataFactory.addProcedureParameter("filePath", TypeFacility.RUNTIME_NAMES.STRING, Type.In, p3); //$NON-NLS-1$
+    }
+
+    @Override
+    public boolean areLobsUsableAfterClose() {
+        return true;
+    }
+
 }

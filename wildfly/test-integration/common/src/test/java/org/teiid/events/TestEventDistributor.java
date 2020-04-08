@@ -25,31 +25,31 @@ import org.teiid.jdbc.FakeServer;
 
 @SuppressWarnings("nls")
 public class TestEventDistributor {
-	private static final String VDB = "PartsSupplier"; //$NON-NLS-1$
-	
-	@Test
-	public void testEvents() throws Exception {
-		FakeServer server = null;
-		try {
-			server = new FakeServer(true);
-			EventListener events = Mockito.mock(EventListener.class);
-			server.getEventDistributor().register(events);
-			
-	    	server.deployVDB(VDB, UnitTestUtil.getTestDataPath() + "/PartsSupplier.vdb");
-	    	
-	    	Mockito.verify(events).vdbDeployed(VDB, "1");
-	    	Mockito.verify(events).vdbLoaded((VDB)Mockito.any());
-	    	
-	    	server.undeployVDB(VDB);
+    private static final String VDB = "PartsSupplier"; //$NON-NLS-1$
 
-	    	Mockito.verify(events).vdbDeployed(VDB, "1");
-	    	Mockito.verify(events).vdbLoaded((VDB)Mockito.any());
-	    	Mockito.verify(events).vdbUndeployed(VDB, "1");
-		} finally { 
-			if (server != null) {
-				server.stop();
-			}
-		}
-	}
+    @Test
+    public void testEvents() throws Exception {
+        FakeServer server = null;
+        try {
+            server = new FakeServer(true);
+            EventListener events = Mockito.mock(EventListener.class);
+            server.getEventDistributor().register(events);
+
+            server.deployVDB(VDB, UnitTestUtil.getTestDataPath() + "/PartsSupplier.vdb");
+
+            Mockito.verify(events).vdbDeployed(VDB, "1");
+            Mockito.verify(events).vdbLoaded((VDB)Mockito.any());
+
+            server.undeployVDB(VDB);
+
+            Mockito.verify(events).vdbDeployed(VDB, "1");
+            Mockito.verify(events).vdbLoaded((VDB)Mockito.any());
+            Mockito.verify(events).vdbUndeployed(VDB, "1");
+        } finally {
+            if (server != null) {
+                server.stop();
+            }
+        }
+    }
 
 }

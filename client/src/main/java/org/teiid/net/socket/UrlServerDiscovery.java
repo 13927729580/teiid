@@ -31,25 +31,25 @@ import org.teiid.net.TeiidURL;
  */
 public class UrlServerDiscovery {
 
-	private TeiidURL url;
-	
-	public UrlServerDiscovery() {
-	}
-	
-	public UrlServerDiscovery(TeiidURL url) {
-		this.url = url;
-	}
-	
-	public List<HostInfo> getKnownHosts() {
-		return url.getHostInfo();
-	}
+    private TeiidURL url;
 
-	public void init(TeiidURL url, Properties p) {
-		this.url = url;
-	}
-	
-	public HostInfo selectNextInstance(List<HostInfo> hosts) {
-		return hosts.remove((int) (Math.random() * hosts.size()));
-	}
-	
+    public UrlServerDiscovery() {
+    }
+
+    public UrlServerDiscovery(TeiidURL url) {
+        this.url = url;
+    }
+
+    public List<HostInfo> getKnownHosts() {
+        return url.getHostInfo();
+    }
+
+    public void init(TeiidURL url, Properties p) {
+        this.url = url;
+    }
+
+    public HostInfo selectNextInstance(List<HostInfo> hosts) {
+        return hosts.remove((int) (Math.random() * hosts.size()));
+    }
+
 }

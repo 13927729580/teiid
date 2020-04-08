@@ -25,50 +25,50 @@ import org.teiid.resource.spi.BasicManagedConnectionFactory;
 
 public class SimpleDBManagedConnectionFactory extends BasicManagedConnectionFactory {
 
-	private static final long serialVersionUID = -1346340853914009086L;
-	
-	private String accessKey;
-	private String secretAccessKey;
+    private static final long serialVersionUID = -1346340853914009086L;
 
-	@Override
-	@SuppressWarnings("serial")
-	public BasicConnectionFactory<SimpleDBConnectionImpl> createConnectionFactory()
-			throws ResourceException {
-		return new BasicConnectionFactory<SimpleDBConnectionImpl>() {
+    private String accessKey;
+    private String secretAccessKey;
 
-			@Override
-			public SimpleDBConnectionImpl getConnection()
-					throws ResourceException {
-				return new SimpleDBConnectionImpl(accessKey, secretAccessKey);
-			}
-			
-		};
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return super.equals(obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		return super.hashCode();
-	}
+    @Override
+    @SuppressWarnings("serial")
+    public BasicConnectionFactory<SimpleDBConnectionImpl> createConnectionFactory()
+            throws ResourceException {
+        return new BasicConnectionFactory<SimpleDBConnectionImpl>() {
 
-	public String getAccessKey() {
-		return accessKey;
-	}
+            @Override
+            public SimpleDBConnectionImpl getConnection()
+                    throws ResourceException {
+                return new SimpleDBConnectionImpl(accessKey, secretAccessKey);
+            }
 
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
-	}
+        };
+    }
 
-	public String getSecretAccessKey() {
-		return secretAccessKey;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
-	public void setSecretAccessKey(String secretAccessKey) {
-		this.secretAccessKey = secretAccessKey;
-	}
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public String getSecretAccessKey() {
+        return secretAccessKey;
+    }
+
+    public void setSecretAccessKey(String secretAccessKey) {
+        this.secretAccessKey = secretAccessKey;
+    }
 
 }

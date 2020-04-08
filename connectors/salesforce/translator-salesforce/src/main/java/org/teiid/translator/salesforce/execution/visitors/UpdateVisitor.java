@@ -24,39 +24,39 @@ import org.teiid.translator.TranslatorException;
 
 public class UpdateVisitor extends CriteriaVisitor implements IQueryProvidingVisitor {
 
-	public UpdateVisitor(RuntimeMetadata metadata) { 
-		super(metadata);
-	}
+    public UpdateVisitor(RuntimeMetadata metadata) {
+        super(metadata);
+    }
 
-	@Override
-	public void visit(Update update) {
-		// don't visit the changes or they will be in the query.
-		visitNode(update.getTable());
+    @Override
+    public void visit(Update update) {
+        // don't visit the changes or they will be in the query.
+        visitNode(update.getTable());
         visitNode(update.getWhere());
-		try {
-			loadColumnMetadata(update.getTable());
-		} catch (TranslatorException ce) {
-			exceptions.add(ce);
-		}
-	}
-	
-	/*
-	 * The SOQL SELECT command uses the following syntax: SELECT fieldList FROM
-	 * objectType [WHERE The Condition Expression (WHERE Clause)] [ORDER BY]
-	 * LIMIT ?
-	 */
+        try {
+            loadColumnMetadata(update.getTable());
+        } catch (TranslatorException ce) {
+            exceptions.add(ce);
+        }
+    }
 
-	public String getQuery() throws TranslatorException {
-		if (!exceptions.isEmpty()) {
-			throw exceptions.get(0);
-		}
-		StringBuilder result = new StringBuilder();
-		result.append(SELECT).append(SPACE);
-		result.append("Id").append(SPACE); //$NON-NLS-1$
-		result.append(FROM).append(SPACE);
-		result.append(table.getSourceName()).append(SPACE);
-		addCriteriaString(result);
-		return result.toString();
-	}
+    /*
+     * The SOQL SELECT command uses the following syntax: SELECT fieldList FROM
+     * objectType [WHERE The Condition Expression (WHERE Clause)] [ORDER BY]
+     * LIMIT ?
+     */
+
+    public String getQuery() throws TranslatorException {
+        if (!exceptions.isEmpty()) {
+            throw exceptions.get(0);
+        }
+        StringBuilder result = new StringBuilder();
+        result.append(SELECT).append(SPACE);
+        result.append("Id").append(SPACE); //$NON-NLS-1$
+        result.append(FROM).append(SPACE);
+        result.append(table.getMetadataObject().getSourceName()).append(SPACE);
+        addCriteriaString(result);
+        return result.toString();
+    }
 
 }

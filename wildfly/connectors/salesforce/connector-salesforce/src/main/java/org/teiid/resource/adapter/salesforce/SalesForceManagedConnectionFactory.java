@@ -26,121 +26,135 @@ import org.teiid.logging.LogConstants;
 import org.teiid.logging.LogManager;
 import org.teiid.resource.spi.BasicConnectionFactory;
 import org.teiid.resource.spi.BasicManagedConnectionFactory;
+import org.teiid.resource.spi.ResourceConnection;
+import org.teiid.salesforce.SalesforceConfiguration;
 import org.teiid.translator.salesforce.SalesForcePlugin;
 
+import com.sforce.async.AsyncApiException;
 import com.sforce.soap.partner.Connector;
+import com.sforce.ws.ConnectionException;
 
 
-public class SalesForceManagedConnectionFactory extends BasicManagedConnectionFactory {
-	private static final long serialVersionUID = 5298591275313314698L;
-	
-	private String username;
-	private String password;
-	private String url; //sf url
-	private Long requestTimeout;
-	private Long connectTimeout;
-	
-	private String proxyUsername;
-	private String proxyPassword;
-	private String proxyUrl;
-	
-	private String configProperties;
-	private String configFile; // path to the "jbossws-cxf.xml" file
+public class SalesForceManagedConnectionFactory extends BasicManagedConnectionFactory implements SalesforceConfiguration {
 
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		if (username.trim().length() == 0) {
-			throw new TeiidRuntimeException("Name can not be null"); //$NON-NLS-1$
-		}
-		this.username = username;
-	}
+    private static final long serialVersionUID = 5298591275313314698L;
 
-	public String getPassword() {
-		return this.password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public String getURL() {
-		return this.url;
-	}
-	
-	public void setURL(String uRL) {
-		this.url = uRL;
-	}
-	
-	public Long getConnectTimeout() {
-		return connectTimeout;
-	}
-	
-	public void setConnectTimeout(Long connectTimeout) {
-		this.connectTimeout = connectTimeout;
-	}
+    private String username;
+    private String password;
+    private String url; //sf url
+    private Long requestTimeout;
+    private Long connectTimeout;
 
-	public Long getRequestTimeout() {
-		return requestTimeout;
-	}
-	
-	public void setRequestTimeout(Long requestTimeout) {
-		this.requestTimeout = requestTimeout;
-	}
-	
-	@Override
-	public BasicConnectionFactory<SalesforceConnectionImpl> createConnectionFactory() throws ResourceException {
-		checkVersion();
-		return new BasicConnectionFactory<SalesforceConnectionImpl>() {
-			private static final long serialVersionUID = 5028356110047329135L;
+    private String proxyUsername;
+    private String proxyPassword;
+    private String proxyUrl;
 
-			@Override
-			public SalesforceConnectionImpl getConnection() throws ResourceException {				
-				return new SalesforceConnectionImpl(SalesForceManagedConnectionFactory.this);
-			}
-		};
-	}
-	
-	public String getProxyUsername() {
-		return proxyUsername;
-	}
-	
-	public void setProxyUsername(String proxyUsername) {
-		this.proxyUsername = proxyUsername;
-	}
-	
-	public String getProxyPassword() {
-		return proxyPassword;
-	}
-	
-	public void setProxyPassword(String proxyPassword) {
-		this.proxyPassword = proxyPassword;
-	}
-	
-	public String getProxyURL() {
-		return proxyUrl;
-	}
-	
-	public void setProxyURL(String proxyUrl) {
-		this.proxyUrl = proxyUrl;
-	}
-	
-	public String getConfigProperties() {
-		return configProperties;
-	}
-	
-	public void setConfigProperties(String configProperties) {
-		this.configProperties = configProperties;
-	}
-	
+    private String configProperties;
+    private String configFile; // path to the "jbossws-cxf.xml" file
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        if (username.trim().length() == 0) {
+            throw new TeiidRuntimeException("Name can not be null"); //$NON-NLS-1$
+        }
+        this.username = username;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getURL() {
+        return this.url;
+    }
+
+    public void setURL(String uRL) {
+        this.url = uRL;
+    }
+
+    @Override
+    public Long getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    public void setConnectTimeout(Long connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
+
+    @Override
+    public Long getRequestTimeout() {
+        return requestTimeout;
+    }
+
+    public void setRequestTimeout(Long requestTimeout) {
+        this.requestTimeout = requestTimeout;
+    }
+
+    @Override
+    public BasicConnectionFactory<ResourceConnection> createConnectionFactory() throws ResourceException {
+        checkVersion();
+        return new BasicConnectionFactory<ResourceConnection>() {
+            private static final long serialVersionUID = 5028356110047329135L;
+
+            @Override
+            public ResourceConnection getConnection() throws ResourceException {
+                try {
+                    return new SalesforceConnectionImpl(SalesForceManagedConnectionFactory.this);
+                } catch (AsyncApiException | ConnectionException e) {
+                    throw new ResourceException(e);
+                }
+            }
+        };
+    }
+
+    public String getProxyUsername() {
+        return proxyUsername;
+    }
+
+    public void setProxyUsername(String proxyUsername) {
+        this.proxyUsername = proxyUsername;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
+    public String getProxyURL() {
+        return proxyUrl;
+    }
+
+    public void setProxyURL(String proxyUrl) {
+        this.proxyUrl = proxyUrl;
+    }
+
+    public String getConfigProperties() {
+        return configProperties;
+    }
+
+    public void setConfigProperties(String configProperties) {
+        this.configProperties = configProperties;
+    }
+
     public String getConfigFile() {
         return this.configFile;
     }
 
     public void setConfigFile(String config) {
         this.configFile = config;
-    }	
-	
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -227,22 +241,27 @@ public class SalesForceManagedConnectionFactory extends BasicManagedConnectionFa
             return false;
         return true;
     }
-    
+
     public void checkVersion() {
+        String apiVersion = url.substring(url.lastIndexOf('/') + 1, url.length());
+        String javaApiVersion = getJavaApiVersion();
+        if (javaApiVersion != null && !javaApiVersion.equals(apiVersion)) {
+            LogManager.logWarning(LogConstants.CTX_CONNECTOR, SalesForcePlugin.Util.gs(SalesForcePlugin.Event.TEIID13009, apiVersion, javaApiVersion));
+        }
+    }
+
+    public static String getJavaApiVersion() {
         try {
-            String apiVersion = url.substring(url.lastIndexOf('/') + 1, url.length());
             Field f = Connector.class.getDeclaredField("END_POINT"); //$NON-NLS-1$
             f.setAccessible(true);
             if(f.isAccessible()){
                 String endPoint = (String) f.get(null);
-                String javaApiVersion = endPoint.substring(endPoint.lastIndexOf('/') + 1, endPoint.length());
-                if (!javaApiVersion.equals(apiVersion)) {
-                    LogManager.logWarning(LogConstants.CTX_CONNECTOR, SalesForcePlugin.Util.gs(SalesForcePlugin.Event.TEIID13009, apiVersion, javaApiVersion));
-                }
+                return endPoint.substring(endPoint.lastIndexOf('/') + 1, endPoint.length());
             }
         } catch (Exception e) {
-            
+
         }
+        return null;
     }
-	
+
 }

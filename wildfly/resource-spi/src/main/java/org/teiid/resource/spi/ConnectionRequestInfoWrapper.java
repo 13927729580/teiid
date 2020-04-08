@@ -21,9 +21,9 @@ import javax.resource.cci.ConnectionSpec;
 import javax.resource.spi.ConnectionRequestInfo;
 
 class ConnectionRequestInfoWrapper implements ConnectionRequestInfo {
-	ConnectionSpec cs;
-	
-	public ConnectionRequestInfoWrapper(ConnectionSpec cs) {
-		this.cs = cs;
-	}
+    ConnectionSpec cs;
+
+    public ConnectionRequestInfoWrapper(ConnectionSpec cs) {
+        this.cs = cs;
+    }
 }

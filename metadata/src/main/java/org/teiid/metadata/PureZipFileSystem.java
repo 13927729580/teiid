@@ -49,7 +49,7 @@ import org.teiid.common.buffer.AutoCleanupUtil;
 import org.teiid.common.buffer.AutoCleanupUtil.Removable;
 
 /**
- * <p/>
+ * <p>
  * This implementation is backed by a zip file.  The provided file must be owned by this instance; otherwise, if the
  * file disappears unexpectedly, the filesystem will malfunction.
  *
@@ -58,40 +58,40 @@ import org.teiid.common.buffer.AutoCleanupUtil.Removable;
  */
 public final class PureZipFileSystem implements FileSystem {
 
-	private static AtomicInteger counter = new AtomicInteger();
-	
+    private static AtomicInteger counter = new AtomicInteger();
+
     public static VirtualFile mount(URL url) throws IOException, URISyntaxException {
-		//we treat each zip as unique if it's possible that it 
-		String fileName = "teiid-vdb-" + url.toExternalForm(); //$NON-NLS-1$
-		VirtualFile root = VFS.getChild(fileName);
-		File f = new File(url.toURI());
-		if (root.exists()) {
-			long lastModified = f.lastModified();
-			if (root.getLastModified() != lastModified) {
-				fileName += counter.get();
-				//TODO: should check existence
-				root = VFS.getChild(fileName);
-			}
-		}
-		synchronized (PureZipFileSystem.class) {
-	    	if (!root.exists()) {
-				final Closeable c = VFS.mount(root, new PureZipFileSystem(f));
-				//in theory we don't need to track the closable as we're not using any resources
-				AutoCleanupUtil.setCleanupReference(root, new Removable() {
-					
-					@Override
-					public void remove() {
-						try {
-							c.close();
-						} catch (IOException e) {
-						}
-					}
-				});
-	    	}
-		}
-    	return root;
-	}
-	
+        //we treat each zip as unique if it's possible that it
+        String fileName = "teiid-vdb-" + url.toExternalForm(); //$NON-NLS-1$
+        VirtualFile root = VFS.getChild(fileName);
+        File f = new File(url.toURI());
+        if (root.exists()) {
+            long lastModified = f.lastModified();
+            if (root.getLastModified() != lastModified) {
+                fileName += counter.get();
+                //TODO: should check existence
+                root = VFS.getChild(fileName);
+            }
+        }
+        synchronized (PureZipFileSystem.class) {
+            if (!root.exists()) {
+                final Closeable c = VFS.mount(root, new PureZipFileSystem(f));
+                //in theory we don't need to track the closable as we're not using any resources
+                AutoCleanupUtil.setCleanupReference(root, new Removable() {
+
+                    @Override
+                    public void remove() {
+                        try {
+                            c.close();
+                        } catch (IOException e) {
+                        }
+                    }
+                });
+            }
+        }
+        return root;
+    }
+
     private final JarFile zipFile;
     private final File archiveFile;
     private final long zipTime;
@@ -149,10 +149,10 @@ public final class PureZipFileSystem implements FileSystem {
         final ZipNode zipNode = getExistingZipNode(mountPoint, target);
         final JarEntry zipEntry = zipNode.entry;
         try {
-			return new File(new URI("jar", archiveFile.toURI().toString() + "!/", zipEntry.getName()));
-		} catch (URISyntaxException e) {
-			throw new IOException(e);
-		}
+            return new File(new URI("jar", archiveFile.toURI().toString() + "!/", zipEntry.getName()));
+        } catch (URISyntaxException e) {
+            throw new IOException(e);
+        }
     }
 
     /** {@inheritDoc} */
@@ -170,7 +170,7 @@ public final class PureZipFileSystem implements FileSystem {
 
     /** {@inheritDoc} */
     public boolean delete(VirtualFile mountPoint, VirtualFile target) {
-    	return false;
+        return false;
     }
 
     /** {@inheritDoc} */
@@ -231,7 +231,7 @@ public final class PureZipFileSystem implements FileSystem {
         }
         return names;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -279,7 +279,7 @@ public final class PureZipFileSystem implements FileSystem {
             }
         });
     }
-    
+
     private File buildFile(File contentsDir, String name) {
        List<String> tokens = PathTokenizer.getTokens(name);
        File currentFile = contentsDir;
@@ -302,7 +302,7 @@ public final class PureZipFileSystem implements FileSystem {
             this.name = name;
             this.entry = entry;
         }
-        
+
         private ZipNode find(VirtualFile mountPoint, VirtualFile target) {
             if (mountPoint.equals(target)) {
                 return this;

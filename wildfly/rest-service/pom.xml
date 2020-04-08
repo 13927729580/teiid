@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>wildfly-parent</artifactId>
 		<groupId>org.teiid.wildfly</groupId>
-		<version>12.2.0-SNAPSHOT</version>
+		<version>14.0.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>rest-service</artifactId>
@@ -31,11 +31,6 @@
             <artifactId>teiid-runtime</artifactId>
         </dependency>
                 
-		<dependency>
-			<groupId>org.teiid</groupId>
-			<artifactId>teiid-admin</artifactId>
-		</dependency>
-		
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>

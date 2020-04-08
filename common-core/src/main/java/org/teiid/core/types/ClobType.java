@@ -32,30 +32,30 @@ import org.teiid.core.util.ExternalizeUtil;
  * interface. This class also implements the Streamable interface
  */
 public final class ClobType extends BaseClobType {
-	
+
     public enum Type {
         TEXT, JSON
     }
 
-	private static final long serialVersionUID = 2753412502127824104L;
+    private static final long serialVersionUID = 2753412502127824104L;
 
     private Type type = Type.TEXT;
 
     public ClobType() {
     }
-    
+
     public ClobType(Clob clob) {
-    	super(clob);
+        super(clob);
     }
-    
+
     public Type getType() {
         return type;
     }
-    
+
     public void setType(Type type) {
         this.type = type;
     }
-    
+
     @Override
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
@@ -68,11 +68,11 @@ public final class ClobType extends BaseClobType {
             this.type = Type.TEXT;
         }
     }
-    
+
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         ExternalizeUtil.writeEnum(out, this.type);
     }
-    
+
 }

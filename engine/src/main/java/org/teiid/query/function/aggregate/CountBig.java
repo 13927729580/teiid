@@ -36,13 +36,13 @@ public class CountBig extends AggregateFunction {
     public void reset() {
         count = 0;
     }
-    
+
     @Override
     public void addInputDirect(List<?> tuple, CommandContext commandContext)
-    		throws TeiidComponentException, TeiidProcessingException {
-    	if (count == Long.MAX_VALUE) {
-    		throw new TeiidProcessingException(QueryPlugin.Event.TEIID31174, QueryPlugin.Util.gs(QueryPlugin.Event.TEIID31174));
-    	}
+            throws TeiidComponentException, TeiidProcessingException {
+        if (count == Long.MAX_VALUE) {
+            throw new TeiidProcessingException(QueryPlugin.Event.TEIID31174, QueryPlugin.Util.gs(QueryPlugin.Event.TEIID31174));
+        }
         count++;
     }
 
@@ -52,21 +52,21 @@ public class CountBig extends AggregateFunction {
     public Object getResult(CommandContext commandContext) {
         return count;
     }
-    
+
     @Override
     public void getState(List<Object> state) {
-    	state.add(count);
+        state.add(count);
     }
-    
+
     @Override
     public int setState(List<?> state, int index) {
-    	count = (Long) state.get(index);
-    	return index++;
+        count = (Long) state.get(index);
+        return index++;
     }
-    
+
     @Override
     public List<? extends Class<?>> getStateTypes() {
-    	return Arrays.asList(Long.class);
+        return Arrays.asList(Long.class);
     }
 
 }

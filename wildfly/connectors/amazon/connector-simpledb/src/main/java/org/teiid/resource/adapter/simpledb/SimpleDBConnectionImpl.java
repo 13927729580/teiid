@@ -60,7 +60,7 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
         } catch (AmazonServiceException e) {
             throw new TranslatorException(e);
         } catch (AmazonClientException e) {
-            throw new TranslatorException(e);            
+            throw new TranslatorException(e);
         }
     }
 
@@ -74,7 +74,7 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
         } catch (AmazonServiceException e) {
             throw new TranslatorException(e);
         } catch (AmazonClientException e) {
-            throw new TranslatorException(e);            
+            throw new TranslatorException(e);
         }
     }
 
@@ -94,8 +94,6 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
 
     /**
      * Removes item with given ItemName from domain
-     * @param domainName
-     * @param itemName
      */
     @Override
     public int performDelete(String domainName, String selectExpression) throws TranslatorException {
@@ -134,9 +132,6 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
 
     /**
      * Performs select expression. This expression must be in format which is understandable to SimpleDB database
-     * @param selectExpression
-     * @param columns
-     * @return Iterator of List<String> results 
      */
     @Override
     public SelectResult performSelect(String selectExpression, String nextToken) throws TranslatorException{
@@ -157,7 +152,7 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
     /**
      *  Performs update on given domain and items
      * @param domainName
-     * @param items
+     * @param updateAttributes
      */
     @Override
     public int performUpdate(String domainName, Map<String, Object> updateAttributes, String selectExpression) throws TranslatorException {
@@ -166,7 +161,7 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
             for (Map.Entry<String, Object> column : updateAttributes.entrySet()) {
                 addAttribute(column.getKey(), column.getValue(), attributes);
             }
-            
+
             List<ReplaceableItem> updateItems = new ArrayList<ReplaceableItem>();
             int count = 0;
             String nextToken = null;
@@ -175,7 +170,7 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
                 nextToken = result.getNextToken();
                 Iterator<Item> iter = result.getItems().iterator();
                 while (iter.hasNext()) {
-                    Item item = iter.next();                                
+                    Item item = iter.next();
                     updateItems.add(new ReplaceableItem(item.getName(), attributes));
                     count++;
                     if (count%25 == 0) {
@@ -190,15 +185,11 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
             throw new TranslatorException(e);
         } catch (AmazonClientException e) {
             throw new TranslatorException(e);
-        }        
+        }
     }
 
     /**
      *  Inserts item into given domain.
-     * @param domainName
-     * @param itemName
-     * @param columnsMap
-     * @return
      */
     @Override
     public int performInsert(String domainName, List<Column> columns, Iterator<? extends List<?>> valueList) throws TranslatorException {
@@ -206,11 +197,11 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
             if (this.domains == null) {
                 this.domains = getDomains();
             }
-            
+
             if (!this.domains.contains(domainName)) {
                 createDomain(domainName);
             }
-            
+
             int count = 0;
             List<ReplaceableItem> insertItems = new ArrayList<ReplaceableItem>();
             while(valueList.hasNext()) {
@@ -253,9 +244,9 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
             this.client.batchPutAttributes(request);
         }
     }
-    
+
     void addAttribute(String name, Object value, List<ReplaceableAttribute> attributes) {
-        if (value != null && value.getClass().isArray()) { 
+        if (value != null && value.getClass().isArray()) {
             String[] values = (String[])value;
             for (int i = 0; i < values.length; i++) {
                 addAttribute(name, values[i], attributes);
@@ -264,12 +255,12 @@ public class SimpleDBConnectionImpl extends BasicConnection implements SimpleDBC
         else {
             ReplaceableAttribute attribute = new ReplaceableAttribute();
             attribute.setName(name);
-            attribute.setReplace(true);            
+            attribute.setReplace(true);
             attribute.setValue((String)value);
             attributes.add(attribute);
-        }        
+        }
     }
-    
+
     private Set<SimpleDBAttribute> getAttributeNamesFromSelectResult(SelectResult selectResult, int attributesCount) {
         Set<SimpleDBAttribute> attributes = new LinkedHashSet<SimpleDBAttribute>();
         Iterator<Item> itemsIterator = selectResult.getItems().iterator();

@@ -27,41 +27,41 @@ import org.teiid.resource.spi.BasicManagedConnectionFactory;
 public class CassandraManagedConnectionFactory extends BasicManagedConnectionFactory{
 
     private static final long serialVersionUID = 6467964324032304311L;
-	private String address;
-	private String keyspace;
+    private String address;
+    private String keyspace;
     private String username;
-    private String password;	
+    private String password;
     private Integer port;
-	
+
     public static final BundleUtil UTIL = BundleUtil.getBundleUtil(CassandraManagedConnectionFactory.class);
-	
-	@Override
-	@SuppressWarnings("serial")
-	public BasicConnectionFactory<CassandraConnectionImpl> createConnectionFactory() throws ResourceException {
-		return new BasicConnectionFactory<CassandraConnectionImpl>() {
-			@Override
-			public CassandraConnectionImpl getConnection() throws ResourceException {
-				return new CassandraConnectionImpl(CassandraManagedConnectionFactory.this);
-			}
-		};
-	}
 
-	public String getKeyspace() {
-		return keyspace;
-	}
+    @Override
+    @SuppressWarnings("serial")
+    public BasicConnectionFactory<CassandraConnectionImpl> createConnectionFactory() throws ResourceException {
+        return new BasicConnectionFactory<CassandraConnectionImpl>() {
+            @Override
+            public CassandraConnectionImpl getConnection() throws ResourceException {
+                return new CassandraConnectionImpl(CassandraManagedConnectionFactory.this);
+            }
+        };
+    }
 
-	public void setKeyspace(String keyspace) {
-		this.keyspace = keyspace;
-	}
+    public String getKeyspace() {
+        return keyspace;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setKeyspace(String keyspace) {
+        this.keyspace = keyspace;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -76,16 +76,16 @@ public class CassandraManagedConnectionFactory extends BasicManagedConnectionFac
 
     public void setPassword(String password) {
         this.password = password;
-    }	
-    
+    }
+
     public Integer getPort() {
         return port;
     }
 
     public void setPort(Integer port) {
         this.port = port;
-    }    
-    
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -136,5 +136,5 @@ public class CassandraManagedConnectionFactory extends BasicManagedConnectionFac
         } else if (!username.equals(other.username))
             return false;
         return true;
-    }	
+    }
 }

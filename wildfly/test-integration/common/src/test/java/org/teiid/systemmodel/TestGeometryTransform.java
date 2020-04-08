@@ -42,16 +42,16 @@ public class TestGeometryTransform extends AbstractQueryTest {
 
     private static final String VDB = "PartsSupplier"; //$NON-NLS-1$
 
-	private static FakeServer server;
+    private static FakeServer server;
 
     @BeforeClass public static void setup() throws Exception {
-    	server = new FakeServer(true);
-    	server.deployVDB(VDB, UnitTestUtil.getTestDataPath() + "/PartsSupplier.vdb"); //$NON-NLS-1$
+        server = new FakeServer(true);
+        server.deployVDB(VDB, UnitTestUtil.getTestDataPath() + "/PartsSupplier.vdb"); //$NON-NLS-1$
     }
 
     @Before public void setUp() throws Exception {
-    	this.internalConnection = server.createConnection("jdbc:teiid:" + VDB); //$NON-NLS-1$
-   	}
+        this.internalConnection = server.createConnection("jdbc:teiid:" + VDB); //$NON-NLS-1$
+       }
 
     @AfterClass public static void teardown() throws Exception {
         server.stop();
@@ -113,7 +113,7 @@ public class TestGeometryTransform extends AbstractQueryTest {
                 "GEOMETRYCOLLECTION (POINT (7.596214015140495 45.37485400208321), LINESTRING (7.324218946503897 44.80283799572692, 8.071928941724545 45.116951986419586))"
         );
     }
-    
+
     @Test public void testSpatialTranformFail() throws Exception {
         // Example from H2GIS docs: http://www.h2gis.org/docs/dev/ST_Transform/
         //
@@ -126,21 +126,21 @@ public class TestGeometryTransform extends AbstractQueryTest {
                 "POINT (2.1145411092971056 50.345602339855326)"
         );
     }
-    
+
     @Test public void testTransformForKml() throws Exception {
-    	String wkt= "POINT(390084.12 5025551.73)";
-    	int srcSrid = 32632;
-    	String sql = String.format("select ST_AsKML(ST_GeomFromText('%s',%d))", wkt, srcSrid); //$NON-NLS-1$
+        String wkt= "POINT(390084.12 5025551.73)";
+        int srcSrid = 32632;
+        String sql = String.format("select ST_AsKML(ST_GeomFromText('%s',%d))", wkt, srcSrid); //$NON-NLS-1$
         execute(sql);
         internalResultSet.next();
         String result = ClobType.getString(internalResultSet.getClob(1));
         String expectedWkt = "<Point>\n  <coordinates>\n    7.596214015140495,45.37485400208321 \n  </coordinates>\n</Point>\n";
         Assert.assertEquals(expectedWkt, result);
     }
-    
+
     @Test public void testGeoProjectedDistance() throws Exception {
-        String sql = "select ST_Distance(\n" + 
-            "ST_Transform(ST_GeomFromText('POINT(-72.1235 42.3521)',4326),26986),\n" + 
+        String sql = "select ST_Distance(\n" +
+            "ST_Transform(ST_GeomFromText('POINT(-72.1235 42.3521)',4326),26986),\n" +
             "ST_Transform(ST_GeomFromText('LINESTRING(-72.1260 42.45, -72.123 42.1546)', 4326),26986))";
         execute(sql);
         internalResultSet.next();

@@ -37,25 +37,25 @@ import com.couchbase.client.java.query.N1qlQueryResult;
 import com.couchbase.client.java.query.consistency.ScanConsistency;
 
 public class CouchbaseConnectionImpl extends BasicConnection implements CouchbaseConnection {
-    
-	static final BundleUtil UTIL = BundleUtil.getBundleUtil(CouchbaseConnectionImpl.class);
 
-	private Cluster cluster;
-	private Bucket bucket;
-	
-	private String namespace; // map to namespaces
-	private ScanConsistency scanConsistency;
-	
-	public CouchbaseConnectionImpl(CouchbaseEnvironment environment, String connectionString, String keyspace, String password, TimeUnit timeUnit, String namespace, ScanConsistency scanConsistent){
+    static final BundleUtil UTIL = BundleUtil.getBundleUtil(CouchbaseConnectionImpl.class);
+
+    private Cluster cluster;
+    private Bucket bucket;
+
+    private String namespace; // map to namespaces
+    private ScanConsistency scanConsistency;
+
+    public CouchbaseConnectionImpl(CouchbaseEnvironment environment, String connectionString, String keyspace, String password, TimeUnit timeUnit, String namespace, ScanConsistency scanConsistent){
         this.scanConsistency = scanConsistent;
-	    this.cluster = CouchbaseCluster.create(environment, connectionString);  
-	    if(password != null) {
+        this.cluster = CouchbaseCluster.create(environment, connectionString);
+        if(password != null) {
             this.bucket = this.cluster.openBucket(keyspace, password, environment.connectTimeout(), timeUnit);
         } else {
             this.bucket = this.cluster.openBucket(keyspace, environment.connectTimeout(), timeUnit);
         }
-	    this.namespace = namespace;
-	}
+        this.namespace = namespace;
+    }
 
     @Override
     public N1qlQueryResult execute(String statement) throws TranslatorException {
@@ -67,7 +67,7 @@ public class CouchbaseConnectionImpl extends BasicConnection implements Couchbas
         }
         return result;
     }
-    
+
     @Override
     public void close() throws ResourceException {
         if(this.bucket != null) {

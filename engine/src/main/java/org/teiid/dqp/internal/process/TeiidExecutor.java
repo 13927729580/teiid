@@ -26,17 +26,17 @@ import org.teiid.adminapi.impl.WorkerPoolStatisticsMetadata;
 
 public interface TeiidExecutor extends Executor {
 
-	void execute(final Runnable command);
+    void execute(final Runnable command);
 
-	WorkerPoolStatisticsMetadata getStats();
-	
-	int getQueued();
-	
-	int getActiveCount();
+    WorkerPoolStatisticsMetadata getStats();
 
-	List<Runnable> shutdownNow();
+    int getQueued();
 
-	boolean awaitTermination(long timeout, TimeUnit unit)
-			throws InterruptedException;
+    int getActiveCount();
+
+    List<Runnable> shutdownNow();
+
+    boolean awaitTermination(long timeout, TimeUnit unit)
+            throws InterruptedException;
 
 }

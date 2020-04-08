@@ -4,9 +4,8 @@
 	<parent>
 		<groupId>org.teiid.connectors</groupId>
 		<artifactId>salesforce</artifactId>
-		<version>12.2.0-SNAPSHOT</version>
+		<version>14.0.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.teiid.connectors</groupId>
 	<artifactId>translator-salesforce-41</artifactId>
 	<name>Salesforce Translator 41</name>
 	<description>Integrates the query engine with Salesforce.com.</description>
@@ -41,13 +40,19 @@
 			<artifactId>teiid-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.force.api</groupId>
-			<artifactId>force-partner-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.teiid.connectors</groupId>
 			<artifactId>translator-salesforce</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-partner-api</artifactId>
+            <scope>runtime</scope>
+		</dependency>
+		<dependency>
+            <groupId>com.force.api</groupId>
+            <artifactId>force-wsc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 	</dependencies>
 
 	<build>

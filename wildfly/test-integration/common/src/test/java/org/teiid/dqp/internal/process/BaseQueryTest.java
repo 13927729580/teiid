@@ -49,7 +49,7 @@ import junit.framework.TestCase;
 
 
 
-/** 
+/**
  * @since 4.2
  */
 public abstract class BaseQueryTest extends TestCase {
@@ -57,12 +57,12 @@ public abstract class BaseQueryTest extends TestCase {
     public BaseQueryTest(String name) {
         super(name);
     }
-    
+
     public static SourceCapabilities getCapabilities(Class<? extends ExecutionFactory> clazz, String... properties) throws Exception {
         VDBTranslatorMetaData tm = new VDBTranslatorMetaData();
-        
+
         tm.setExecutionFactoryClass(clazz);
-        
+
         if (properties != null) {
             Properties p = new Properties();
             for (int i = 0; i < properties.length / 2; i++) {
@@ -72,26 +72,26 @@ public abstract class BaseQueryTest extends TestCase {
         ExecutionFactory ef = TranslatorUtil.buildExecutionFactory(tm);
         return CapabilitiesConverter.convertCapabilities(ef);
     }
-    
+
     public static TransformationMetadata createMetadata(String vdbFile) {
         return VDBMetadataFactory.getVDBMetadata(vdbFile);
     }
-        
+
     protected void doProcess(QueryMetadataInterface metadata, String sql, CapabilitiesFinder capFinder, ProcessorDataManager dataManager, List[] expectedResults, boolean debug) throws Exception {
-    	CommandContext context = createCommandContext();
+        CommandContext context = createCommandContext();
         BufferManagerImpl bm = BufferManagerFactory.createBufferManager();
         bm.setProcessorBatchSize(context.getProcessorBatchSize());
         context.setBufferManager(bm);
         doProcess(metadata, sql, capFinder, dataManager, expectedResults,
-				debug, context);
+                debug, context);
     }
 
-	protected void doProcess(QueryMetadataInterface metadata, String sql,
-			CapabilitiesFinder capFinder, ProcessorDataManager dataManager,
-			List[] expectedResults, boolean debug, CommandContext context)
-			throws TeiidComponentException, TeiidProcessingException,
-			QueryMetadataException, QueryPlannerException, Exception {
-		Command command = TestOptimizer.helpGetCommand(sql, metadata);
+    protected void doProcess(QueryMetadataInterface metadata, String sql,
+            CapabilitiesFinder capFinder, ProcessorDataManager dataManager,
+            List[] expectedResults, boolean debug, CommandContext context)
+            throws TeiidComponentException, TeiidProcessingException,
+            QueryMetadataException, QueryPlannerException, Exception {
+        Command command = TestOptimizer.helpGetCommand(sql, metadata);
 
         // plan
         AnalysisRecord analysisRecord = new AnalysisRecord(false, debug);
@@ -104,12 +104,12 @@ public abstract class BaseQueryTest extends TestCase {
             }
         }
 
-    	TestProcessor.doProcess(plan, dataManager, expectedResults, context);
-	}
+        TestProcessor.doProcess(plan, dataManager, expectedResults, context);
+    }
 
     protected CommandContext createCommandContext() {
-        CommandContext context = new CommandContext(new RequestID(), "test", "user", "myvdb", 1); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        CommandContext context = new CommandContext(new RequestID(), "test", "user", "myvdb", 1); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return context;
-    }       
-    
+    }
+
 }

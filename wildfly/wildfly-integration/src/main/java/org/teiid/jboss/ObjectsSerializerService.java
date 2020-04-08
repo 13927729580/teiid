@@ -24,27 +24,27 @@ import org.jboss.msc.service.StopContext;
 import org.jboss.msc.value.InjectedValue;
 
 class ObjectsSerializerService implements Service<ObjectSerializer> {
-	private InjectedValue<String> pathInjector = new InjectedValue<String>();
-	private ObjectSerializer serializer;
-	
-	public ObjectsSerializerService(){
-	}
-	
-	@Override
-	public void start(StartContext context) throws StartException {
-		this.serializer = new ObjectSerializer(pathInjector.getValue());
-	}
+    private InjectedValue<String> pathInjector = new InjectedValue<String>();
+    private ObjectSerializer serializer;
 
-	@Override
-	public void stop(StopContext context) {
-	}
+    public ObjectsSerializerService(){
+    }
 
-	@Override
-	public ObjectSerializer getValue() throws IllegalStateException, IllegalArgumentException {
-		return this.serializer;
-	}
-	
-	public InjectedValue<String> getPathInjector() {
-		return this.pathInjector;
-	}
+    @Override
+    public void start(StartContext context) throws StartException {
+        this.serializer = new ObjectSerializer(pathInjector.getValue());
+    }
+
+    @Override
+    public void stop(StopContext context) {
+    }
+
+    @Override
+    public ObjectSerializer getValue() throws IllegalStateException, IllegalArgumentException {
+        return this.serializer;
+    }
+
+    public InjectedValue<String> getPathInjector() {
+        return this.pathInjector;
+    }
 }

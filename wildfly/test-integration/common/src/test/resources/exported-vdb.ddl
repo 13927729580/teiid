@@ -4,7 +4,7 @@
 # START DATABASE foo
 ###########################################
 */
-CREATE DATABASE foo VERSION '1' OPTIONS ("connection-type" 'BY_VERSION', "deployment-name" 'foo-vdb.ddl');
+CREATE DATABASE foo VERSION '1' OPTIONS ("deployment-name" 'foo-vdb.ddl');
 USE DATABASE foo VERSION '1';
 
 --############ Translators ############
@@ -12,7 +12,7 @@ CREATE FOREIGN DATA WRAPPER loopback;
 
 
 --############ Servers ############
-CREATE SERVER NONE FOREIGN DATA WRAPPER loopback OPTIONS ("jndi-name" 'NONE');
+CREATE SERVER NONE FOREIGN DATA WRAPPER loopback OPTIONS ("resource-name" 'NONE');
 
 
 --############ Schemas ############

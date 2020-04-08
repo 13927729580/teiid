@@ -65,6 +65,37 @@ CREATE FOREIGN TABLE StoredProcedures (
     UNIQUE(UID)
 );
 
+CREATE FOREIGN TABLE SESSIONS (
+    VDBName string(255) NOT NULL,
+    SessionId string(255) NOT NULL,
+    UserName string(255) NOT NULL,
+    CreatedTime timestamp NOT NULL,
+    ApplicationName string(255),
+    IPAddress string(255),
+    PRIMARY KEY (SessionId)
+);
+
+CREATE FOREIGN TABLE REQUESTS (
+    VDBName string(255) NOT NULL,
+    SessionId string(255) NOT NULL,
+    ExecutionId long NOT NULL,
+    Command clob NOT NULL,
+    StartTimestamp timestamp NOT NULL,
+    TransactionId string(255),
+    ProcessingState string(255),
+    ThreadState string(255),
+    IsSource boolean NOT NULL,
+    FOREIGN KEY (SessionId) REFERENCES SESSIONS (SessionId)
+);
+
+CREATE FOREIGN TABLE TRANSACTIONS (
+    TransactionId string(255) NOT NULL,
+    SessionId string(255),
+    StartTimestamp timestamp NOT NULL,
+    Scope string(255),
+    FOREIGN KEY (SessionId) REFERENCES SESSIONS (SessionId)
+);
+
 CREATE FOREIGN PROCEDURE isLoggable(OUT loggable boolean NOT NULL RESULT, IN level string NOT NULL DEFAULT 'DEBUG', IN context string NOT NULL DEFAULT 'org.teiid.PROCESSOR')
 OPTIONS (UPDATECOUNT 0);
 
@@ -546,3 +577,9 @@ BEGIN
         EXECUTE sysadmin.logMsg(context=>'org.teiid.PROCESSOR.MATVIEWS', level=>'WARN', msg=>e.exception);
     END
 END
+
+CREATE FOREIGN PROCEDURE terminateSession(OUT terminated boolean NOT NULL RESULT, IN SessionId string NOT NULL);
+
+CREATE FOREIGN PROCEDURE cancelRequest(OUT cancelled boolean NOT NULL RESULT, IN SessionId string NOT NULL, IN executionId long NOT NULL);
+
+CREATE FOREIGN PROCEDURE terminateTransaction(IN sessionid string NOT NULL);

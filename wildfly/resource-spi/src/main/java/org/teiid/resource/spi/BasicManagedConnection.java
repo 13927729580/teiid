@@ -35,148 +35,148 @@ import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
 
 public class BasicManagedConnection implements ManagedConnection {
-	protected PrintWriter log;
-	protected final Collection<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
-	private BasicConnection physicalConnection;
-	private final Set<WrappedConnection> handles = new HashSet<WrappedConnection>();
-	
-	public BasicManagedConnection(BasicConnection connection) {
-		this.physicalConnection = connection;
-	}
+    protected PrintWriter log;
+    protected final Collection<ConnectionEventListener> listeners = new ArrayList<ConnectionEventListener>();
+    private ResourceConnection physicalConnection;
+    private final Set<WrappedConnection> handles = new HashSet<WrappedConnection>();
 
-	@Override
-	public void associateConnection(Object handle) throws ResourceException {
-		if (!(handle instanceof WrappedConnection)) {
-			throw new ResourceException("Wrong connection supplied to assosiate"); //$NON-NLS-1$
-		}
-		((WrappedConnection)handle).setManagedConnection(this);
-		synchronized (this.handles) {
-			this.handles.add((WrappedConnection)handle);
-		}
-	}
+    public BasicManagedConnection(ResourceConnection connection) {
+        this.physicalConnection = connection;
+    }
 
-	@Override
-	public void cleanup() throws ResourceException {
-		synchronized (this.handles) {
-			for (WrappedConnection wc:this.handles) {
-				wc.setManagedConnection(null);
-			}
-			handles.clear();
-		}
-		if (this.physicalConnection != null) {
-			this.physicalConnection.cleanUp();
-		}
-		ConnectionContext.setSubject(null);
-	}
+    @Override
+    public void associateConnection(Object handle) throws ResourceException {
+        if (!(handle instanceof WrappedConnection)) {
+            throw new ResourceException("Wrong connection supplied to assosiate"); //$NON-NLS-1$
+        }
+        ((WrappedConnection)handle).setManagedConnection(this);
+        synchronized (this.handles) {
+            this.handles.add((WrappedConnection)handle);
+        }
+    }
 
-	@Override
-	public void destroy() throws ResourceException {
-		cleanup();
-		
-		this.physicalConnection.close();
-		this.physicalConnection = null;
-	}
-	
-	@Override
-	public ManagedConnectionMetaData getMetaData() throws ResourceException {
-		return null;
-	}
-	
-	@Override
-	public Object getConnection(Subject arg0, ConnectionRequestInfo arg1) throws ResourceException {
-		ConnectionContext.setSubject(arg0);
-		
-		WrappedConnection wc = new WrappedConnection(this); 
-		synchronized(this.handles) {
-			this.handles.add(wc);
-		}
-		return wc; 
-	}
+    @Override
+    public void cleanup() throws ResourceException {
+        synchronized (this.handles) {
+            for (WrappedConnection wc:this.handles) {
+                wc.setManagedConnection(null);
+            }
+            handles.clear();
+        }
+        if (this.physicalConnection != null) {
+            this.physicalConnection.cleanUp();
+        }
+        ConnectionContext.setSubject(null);
+    }
 
-	@Override
-	public LocalTransaction getLocalTransaction() throws ResourceException {
-	    javax.resource.cci.LocalTransaction localTxn = this.physicalConnection.getLocalTransaction();
-	    if (localTxn == null) {
-	        return null;
-	    }
-		return new LocalTransaction() {
-            
+    @Override
+    public void destroy() throws ResourceException {
+        cleanup();
+
+        this.physicalConnection.close();
+        this.physicalConnection = null;
+    }
+
+    @Override
+    public ManagedConnectionMetaData getMetaData() throws ResourceException {
+        return null;
+    }
+
+    @Override
+    public Object getConnection(Subject arg0, ConnectionRequestInfo arg1) throws ResourceException {
+        ConnectionContext.setSubject(arg0);
+
+        WrappedConnection wc = new WrappedConnection(this);
+        synchronized(this.handles) {
+            this.handles.add(wc);
+        }
+        return wc;
+    }
+
+    @Override
+    public LocalTransaction getLocalTransaction() throws ResourceException {
+        javax.resource.cci.LocalTransaction localTxn = this.physicalConnection.getLocalTransaction();
+        if (localTxn == null) {
+            return null;
+        }
+        return new LocalTransaction() {
+
             @Override
             public void rollback() throws ResourceException {
                 localTxn.rollback();
             }
-            
+
             @Override
             public void commit() throws ResourceException {
                 localTxn.commit();
             }
-            
+
             @Override
             public void begin() throws ResourceException {
                 localTxn.begin();
             }
         };
-	}
+    }
 
-	@Override
-	public XAResource getXAResource() throws ResourceException {
-		return this.physicalConnection.getXAResource();
-	}
-	
-	@Override
-	public void addConnectionEventListener(ConnectionEventListener arg0) {
-		synchronized (this.listeners) {
-			this.listeners.add(arg0);
-		}
-	}	
+    @Override
+    public XAResource getXAResource() throws ResourceException {
+        return this.physicalConnection.getXAResource();
+    }
 
-	@Override
-	public void removeConnectionEventListener(ConnectionEventListener arg0) {
-		synchronized (this.listeners) {
-			this.listeners.remove(arg0);
-		}
-	}
+    @Override
+    public void addConnectionEventListener(ConnectionEventListener arg0) {
+        synchronized (this.listeners) {
+            this.listeners.add(arg0);
+        }
+    }
 
-	@Override
-	public void setLogWriter(PrintWriter arg0) throws ResourceException {
-		this.log = arg0;
-	}
-	
-	@Override
-	public PrintWriter getLogWriter() throws ResourceException {
-		return this.log;
-	}
+    @Override
+    public void removeConnectionEventListener(ConnectionEventListener arg0) {
+        synchronized (this.listeners) {
+            this.listeners.remove(arg0);
+        }
+    }
 
-	// called by the wrapped connection to notify the close of the connection.
-	void connectionClosed(WrappedConnection wc) {
-		
-		synchronized (this.handles) {
-			handles.remove(wc);
-		}
-		
-		ConnectionEvent ce = new ConnectionEvent(this, ConnectionEvent.CONNECTION_CLOSED);
-		ce.setConnectionHandle(wc);
-		
-		ArrayList<ConnectionEventListener> copy = null;
-		synchronized (this.listeners) {
-			copy = new ArrayList<ConnectionEventListener>(this.listeners);
-		}
-		
-		for(ConnectionEventListener l: copy) {
-			l.connectionClosed(ce);
-		}
-	}
-	
+    @Override
+    public void setLogWriter(PrintWriter arg0) throws ResourceException {
+        this.log = arg0;
+    }
+
+    @Override
+    public PrintWriter getLogWriter() throws ResourceException {
+        return this.log;
+    }
+
+    // called by the wrapped connection to notify the close of the connection.
+    void connectionClosed(WrappedConnection wc) {
+
+        synchronized (this.handles) {
+            handles.remove(wc);
+        }
+
+        ConnectionEvent ce = new ConnectionEvent(this, ConnectionEvent.CONNECTION_CLOSED);
+        ce.setConnectionHandle(wc);
+
+        ArrayList<ConnectionEventListener> copy = null;
+        synchronized (this.listeners) {
+            copy = new ArrayList<ConnectionEventListener>(this.listeners);
+        }
+
+        for(ConnectionEventListener l: copy) {
+            l.connectionClosed(ce);
+        }
+    }
+
    Connection getConnection() throws ResourceException {
       if (this.physicalConnection == null)
          throw new ResourceException("Connection has been destroyed!!!"); //$NON-NLS-1$
       return this.physicalConnection;
-   }	
-   
+   }
+
    public boolean isValid() {
-	   if (this.physicalConnection == null) {
-		   return false;
-	   }
-	   return this.physicalConnection.isAlive();
+       if (this.physicalConnection == null) {
+           return false;
+       }
+       return this.physicalConnection.isAlive();
    }
 }

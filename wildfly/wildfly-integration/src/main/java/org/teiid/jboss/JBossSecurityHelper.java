@@ -56,56 +56,51 @@ import org.teiid.security.GSSResult;
 import org.teiid.security.SecurityHelper;
 
 public class JBossSecurityHelper implements SecurityHelper, Serializable {
-	private static final long serialVersionUID = 3598997061994110254L;
-	public static final String AT = "@"; //$NON-NLS-1$
-	
-	@Override
-	public SecurityContext associateSecurityContext(Object newContext) {
-		SecurityContext context = SecurityActions.getSecurityContext();
-		if (newContext != context) {
-			SecurityActions.setSecurityContext((SecurityContext)newContext);
-		}
-		return context;
-	}
+    private static final long serialVersionUID = 3598997061994110254L;
+    public static final String AT = "@"; //$NON-NLS-1$
 
-	@Override
-	public void clearSecurityContext() {
-		SecurityActions.clearSecurityContext();
-	}
-	
-	@Override
-	public SecurityContext getSecurityContext() {
-		return SecurityActions.getSecurityContext();
-	}	
-	
-	public SecurityContext createSecurityContext(String securityDomain, Principal p, Object credentials, Subject subject) {
-		return SecurityActions.createSecurityContext(p, credentials, subject, securityDomain);
-	}
+    @Override
+    public SecurityContext associateSecurityContext(Object newContext) {
+        SecurityContext context = SecurityActions.getSecurityContext();
+        if (newContext != context) {
+            SecurityActions.setSecurityContext((SecurityContext)newContext);
+        }
+        return context;
+    }
 
-	@Override
-	public Subject getSubjectInContext(String securityDomain) {
-		SecurityContext sc = SecurityActions.getSecurityContext();
-		if (sc != null && sc.getSecurityDomain().equals(securityDomain)) {
-			return getSubjectInContext(sc);
-		}		
-		return null;
-	}
-	
-	@Override
-	public Subject getSubjectInContext(Object context) {
-		if (!(context instanceof SecurityContext)) {
-			return null;
-		}
-		SecurityContext sc = (SecurityContext)context;
-		SubjectInfo si = sc.getSubjectInfo();
-		Subject subject = si.getAuthenticatedSubject();
-		return subject;
-	}
+    @Override
+    public void clearSecurityContext() {
+        SecurityActions.clearSecurityContext();
+    }
 
-	@Override
-	public SecurityContext authenticate(String domain,
-			String baseUsername, Credentials credentials, String applicationName) throws LoginException {
-	    // If username specifies a domain (user@domain) only that domain is authenticated against.
+    @Override
+    public Object getSecurityContext(String securityDomain) {
+        SecurityContext sc = SecurityActions.getSecurityContext();
+        if (sc != null && sc.getSecurityDomain().equals(securityDomain)) {
+            return sc;
+        }
+        return null;
+    }
+
+    public SecurityContext createSecurityContext(String securityDomain, Principal p, Object credentials, Subject subject) {
+        return SecurityActions.createSecurityContext(p, credentials, subject, securityDomain);
+    }
+
+    @Override
+    public Subject getSubjectInContext(Object context) {
+        if (!(context instanceof SecurityContext)) {
+            return null;
+        }
+        SecurityContext sc = (SecurityContext)context;
+        SubjectInfo si = sc.getSubjectInfo();
+        Subject subject = si.getAuthenticatedSubject();
+        return subject;
+    }
+
+    @Override
+    public SecurityContext authenticate(String domain,
+            String baseUsername, Credentials credentials, String applicationName) throws LoginException {
+        // If username specifies a domain (user@domain) only that domain is authenticated against.
         SecurityDomainContext securityDomainContext = getSecurityDomainContext(domain);
         if (securityDomainContext != null) {
             Subject subject = new Subject();
@@ -113,13 +108,13 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
             SecurityContext securityContext = null;
             AuthenticationManager authManager = securityDomainContext.getAuthenticationManager();
             if (authManager != null) {
-                Principal userPrincipal = new SimplePrincipal(baseUsername);                
-                String credString = credentials==null?null:new String(credentials.getCredentialsAsCharArray());
+                Principal userPrincipal = new SimplePrincipal(baseUsername);
+                String credString = credentials==null?null:credentials.getCredentials();
                 isValid = authManager.isValid(userPrincipal, credString, subject);
                 securityContext = createSecurityContext(domain, userPrincipal, credString, subject);
-                LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Logon successful for \"", baseUsername, "\" in security domain", domain}); //$NON-NLS-1$ //$NON-NLS-2$                
+                LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Logon successful for \"", baseUsername, "\" in security domain", domain}); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            
+
             if (isValid) {
                 MappingManager mappingManager = securityDomainContext.getMappingManager();
                 if (mappingManager != null) {
@@ -135,7 +130,7 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
                         //Append any deployment role->principals configuration done by the user
                         contextMap.put(SecurityConstants.DEPLOYMENT_PRINCIPAL_ROLES_MAP,
                               SecurityRolesAssociation.getSecurityRoles());
-                        
+
                         //Append the principals also
                         contextMap.put(SecurityConstants.PRINCIPALS_SET_IDENTIFIER, subject.getPrincipals());
                         LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Roles before mapping \"", userRoles.toString()}); //$NON-NLS-1$
@@ -143,32 +138,32 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
 
                         mc.performMapping(contextMap, userRoles);
                         RoleGroup mappedRoles = mc.getMappingResult().getMappedObject();
-                        LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Roles after mapping \"", mappedRoles.toString()}); //$NON-NLS-1$                        
+                        LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Roles after mapping \"", mappedRoles.toString()}); //$NON-NLS-1$
                     }
-                }            
+                }
                 return securityContext;
-            }                       
+            }
         }
-        throw new LoginException(IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50072, baseUsername, domain ));       
-    }           
-    
+        throw new LoginException(IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50072, baseUsername, domain ));
+    }
+
     @Override
     public GSSResult negotiateGssLogin(String securityDomain, byte[] serviceTicket) throws LoginException {
-        
+
         SecurityDomainContext securityDomainContext = getSecurityDomainContext(securityDomain);
         if (securityDomainContext != null) {
             AuthenticationManager authManager = securityDomainContext.getAuthenticationManager();
 
             if (authManager != null) {
-                Object previous = null;                 
+                Object previous = null;
                 NegotiationContext context = new NegotiationContext();
                 context.setRequestMessage(new KerberosMessage(Constants.KERBEROS_V5, serviceTicket));
-                
+
                 try {
                     context.associate();
                     SecurityContext securityContext = createSecurityContext(securityDomain, new SimplePrincipal("temp"), null, new Subject()); //$NON-NLS-1$
                     previous = associateSecurityContext(securityContext);
-                    
+
                     Subject subject = new Subject();
                     boolean isValid = authManager.isValid(null, null, subject);
                     if (isValid) {
@@ -181,12 +176,12 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
                         GSSCredential delegationCredential = null;
                         //if isValid checked just the cache the context will be null
                         if (context.getSchemeContext() == null) {
-                            Set<GSSCredential> credentials = subject.getPrivateCredentials(GSSCredential.class); 
+                            Set<GSSCredential> credentials = subject.getPrivateCredentials(GSSCredential.class);
                             if (credentials != null && !credentials.isEmpty()) {
                                 delegationCredential = credentials.iterator().next();
                             }
                         }
-                        
+
                         Object sc = createSecurityContext(securityDomain, principal, null, subject);
                         LogManager.logDetail(LogConstants.CTX_SECURITY, new Object[] {"Logon successful though GSS API"}); //$NON-NLS-1$
                         GSSResult result = buildGSSResult(context, securityDomain, true, delegationCredential);
@@ -207,7 +202,7 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
                 }
             }
         }
-        throw new LoginException(IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50072, "GSS Auth", securityDomain)); //$NON-NLS-1$     
+        throw new LoginException(IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50072, "GSS Auth", securityDomain)); //$NON-NLS-1$
     }
 
     private GSSResult buildGSSResult(NegotiationContext context, String securityDomain, boolean validAuth, GSSCredential delegationCredential) throws LoginException {
@@ -217,7 +212,7 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
                 delegationCredential = securityContext.getDelegCred();
             }
             if (context.getResponseMessage() == null && validAuth) {
-                return new GSSResult(context.isAuthenticated(), delegationCredential);            
+                return new GSSResult(context.isAuthenticated(), delegationCredential);
             }
             if (context.getResponseMessage() instanceof KerberosMessage) {
                 KerberosMessage km = (KerberosMessage)context.getResponseMessage();
@@ -228,8 +223,8 @@ public class JBossSecurityHelper implements SecurityHelper, Serializable {
             throw new LoginException(e.getMessage());
         }
         throw new LoginException(IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50103, securityDomain));
-    }  
-    
+    }
+
     protected SecurityDomainContext getSecurityDomainContext(String securityDomain) {
         if (securityDomain != null && !securityDomain.isEmpty()) {
             ServiceName name = ServiceName.JBOSS.append("security", "security-domain", securityDomain); //$NON-NLS-1$ //$NON-NLS-2$

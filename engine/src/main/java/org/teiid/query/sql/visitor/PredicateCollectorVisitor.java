@@ -29,7 +29,7 @@ import org.teiid.query.sql.navigator.PreOrderNavigator;
 
 /**
  * <p>Walk a tree of language objects and collect any predicate criteria that are found.
- * A predicate criteria is of the following types: </p>
+ * A predicate criteria is of the following types:
  *
  * <ul>
  * <li>{@link org.teiid.query.sql.lang.CompareCriteria} CompareCriteria</li>
@@ -119,14 +119,14 @@ public class PredicateCollectorVisitor extends LanguageVisitor {
         this.predicates.add(obj);
     }
 
-	/**
-	 * Visit a language object and collect criteria.  This method should <b>NOT</b> be
-	 * called directly.
-	 * @param obj Language object
-	 */
-	public void visit(SubquerySetCriteria obj) {
-		this.predicates.add(obj);
-	}
+    /**
+     * Visit a language object and collect criteria.  This method should <b>NOT</b> be
+     * called directly.
+     * @param obj Language object
+     */
+    public void visit(SubquerySetCriteria obj) {
+        this.predicates.add(obj);
+    }
 
     /**
      * Get a collection of predicates discovered while visiting.

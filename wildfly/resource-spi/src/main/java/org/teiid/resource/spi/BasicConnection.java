@@ -17,56 +17,10 @@
  */
 package org.teiid.resource.spi;
 
-import javax.resource.NotSupportedException;
-import javax.resource.ResourceException;
-import javax.resource.cci.Connection;
-import javax.resource.cci.ConnectionMetaData;
-import javax.resource.cci.Interaction;
-import javax.resource.cci.LocalTransaction;
-import javax.resource.cci.ResultSetInfo;
-import javax.resource.spi.ManagedConnection;
-import javax.transaction.xa.XAResource;
-
-public abstract class BasicConnection implements Connection, org.teiid.resource.api.Connection {
-
-	@Override
-	public Interaction createInteraction() throws ResourceException {
-		throw new ResourceException("This operation not supported"); //$NON-NLS-1$
-	}
-
-	@Override
-	public LocalTransaction getLocalTransaction() throws ResourceException {
-		throw new NotSupportedException();
-	}
-
-	@Override
-	public ConnectionMetaData getMetaData() throws ResourceException {
-		throw new ResourceException("This operation not supported"); //$NON-NLS-1$
-	}
-
-	@Override
-	public ResultSetInfo getResultSetInfo() throws ResourceException {
-		throw new ResourceException("This operation not supported"); //$NON-NLS-1$
-	}
-	
-	public XAResource getXAResource() throws ResourceException {
-		return null;
-	}
-	
-	/**
-	 * Tests the connection to see if it is still valid.
-	 * @return
-	 */
-	public boolean isAlive() {
-		return true;
-	}
-	
-	/**
-	 * Called by the {@link ManagedConnection} to indicate the physical connection
-	 * should be cleaned up for reuse.
-	 */
-	public void cleanUp() {
-		
-	}
+/**
+ * see {@link ResourceConnection}
+ */
+@Deprecated
+public abstract class BasicConnection implements ResourceConnection {
 
 }

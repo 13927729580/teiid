@@ -4,7 +4,7 @@
 	<parent>
         <groupId>org.teiid.wildfly.connectors</groupId>
 		<artifactId>file</artifactId>
-		<version>12.2.0-SNAPSHOT</version>
+		<version>14.0.0-SNAPSHOT</version>
 	</parent>
     <artifactId>feature-pack-file</artifactId>
     <name>Teiid Connector file Feature Pack</name>
@@ -31,12 +31,10 @@
         <dependency>
             <groupId>org.teiid.connectors</groupId>
             <artifactId>translator-file</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.teiid.connectors</groupId>
             <artifactId>translator-excel</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.teiid.wildfly.connectors</groupId>
@@ -51,7 +49,6 @@
         <dependency>
             <groupId>org.teiid.connectors</groupId>
             <artifactId>file-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

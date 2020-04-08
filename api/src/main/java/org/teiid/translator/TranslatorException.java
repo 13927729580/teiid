@@ -22,20 +22,20 @@ import org.teiid.core.BundleUtil;
 import org.teiid.core.TeiidException;
 
 /**
- * An exception the connector writer can return in case of an 
+ * An exception the connector writer can return in case of an
  * error while using the connector.
  */
 public class TranslatorException extends TeiidException{
 
-	private static final long serialVersionUID = -5980862789340592219L;
+    private static final long serialVersionUID = -5980862789340592219L;
 
-	/**
+    /**
      * No-arg constructor required by Externalizable semantics.
      */
     public TranslatorException() {
         super();
     }
-    
+
     /**
      * Construct an instance with the message specified.
      *
@@ -44,7 +44,7 @@ public class TranslatorException extends TeiidException{
     public TranslatorException( String message ) {
         super( message );
     }
-    
+
 
     /**
      * Construct an instance from a message and an exception to chain to this one.
@@ -54,8 +54,8 @@ public class TranslatorException extends TeiidException{
      */
     public TranslatorException( Throwable e, String message ) {
         super(e, message);
-    }  
-    
+    }
+
     /**
      * Construct an instance with a linked exception specified.
      *
@@ -63,17 +63,17 @@ public class TranslatorException extends TeiidException{
      */
     public TranslatorException(Throwable e) {
         super(e);
-    }  
+    }
 
     public TranslatorException(BundleUtil.Event event, Throwable e) {
         super(event, e);
-    }  
+    }
 
     public TranslatorException(BundleUtil.Event event, Throwable e, String message) {
         super(event, e, message);
-    } 
-    
+    }
+
     public TranslatorException(BundleUtil.Event event, String message) {
         super(event, message);
-    } 
+    }
 }

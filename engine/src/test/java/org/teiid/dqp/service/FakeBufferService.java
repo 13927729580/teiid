@@ -26,32 +26,32 @@ public class FakeBufferService implements BufferService {
 
     private BufferManagerImpl bufferMgr;
     private TupleBufferCache tupleBufferCache;
-    
+
     public FakeBufferService() {
-    	this(true);
+        this(true);
     }
-    
+
     public FakeBufferService(boolean shared) {
-    	if (shared) {
-    		bufferMgr = BufferManagerFactory.getStandaloneBufferManager();
-    	} else {
-    		bufferMgr = BufferManagerFactory.createBufferManager();
-    	}
-    	this.tupleBufferCache = bufferMgr;
+        if (shared) {
+            bufferMgr = BufferManagerFactory.getStandaloneBufferManager();
+        } else {
+            bufferMgr = BufferManagerFactory.createBufferManager();
+        }
+        this.tupleBufferCache = bufferMgr;
     }
-    
+
     public FakeBufferService(BufferManagerImpl buffManager, TupleBufferCache tupleBufferCache) {
-    	this.bufferMgr = buffManager;
-    	this.tupleBufferCache = tupleBufferCache;
+        this.bufferMgr = buffManager;
+        this.tupleBufferCache = tupleBufferCache;
     }
 
     public BufferManagerImpl getBufferManager() {
         return bufferMgr;
     }
-    
+
     @Override
     public TupleBufferCache getTupleBufferCache() {
-    	return tupleBufferCache;
+        return tupleBufferCache;
     }
 
 }

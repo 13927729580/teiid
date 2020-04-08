@@ -54,150 +54,150 @@ import org.teiid.services.InternalEventDistributorFactory;
 
 
 public class DQPCoreService extends DQPConfiguration implements Serializable, Service<DQPCore>  {
-	private static final long serialVersionUID = -4676205340262775388L;
-		
-	private transient TransactionServerImpl transactionServerImpl = new TransactionServerImpl();
-	private transient DQPCore dqpCore = new DQPCore();
-	private transient JMXService jmx;
+    private static final long serialVersionUID = -4676205340262775388L;
 
-	private final InjectedValue<WorkManager> workManagerInjector = new InjectedValue<WorkManager>();
-	private final InjectedValue<XATerminator> xaTerminatorInjector = new InjectedValue<XATerminator>();
-	private final InjectedValue<TransactionManager> txnManagerInjector = new InjectedValue<TransactionManager>();
-	private final InjectedValue<BufferManager> bufferManagerInjector = new InjectedValue<BufferManager>();
-	private final InjectedValue<TranslatorRepository> translatorRepositoryInjector = new InjectedValue<TranslatorRepository>();
-	private final InjectedValue<VDBRepository> vdbRepositoryInjector = new InjectedValue<VDBRepository>();
-	private final InjectedValue<AuthorizationValidator> authorizationValidatorInjector = new InjectedValue<AuthorizationValidator>();
-	private final InjectedValue<PreParser> preParserInjector = new InjectedValue<PreParser>();
-	private final InjectedValue<SessionAwareCache> preparedPlanCacheInjector = new InjectedValue<SessionAwareCache>();
-	private final InjectedValue<SessionAwareCache> resultSetCacheInjector = new InjectedValue<SessionAwareCache>();
-	private final InjectedValue<InternalEventDistributorFactory> eventDistributorFactoryInjector = new InjectedValue<InternalEventDistributorFactory>();
-	
-	@Override
+    private transient TransactionServerImpl transactionServerImpl = new TransactionServerImpl();
+    private transient DQPCore dqpCore = new DQPCore();
+    private transient JMXService jmx;
+
+    private final InjectedValue<WorkManager> workManagerInjector = new InjectedValue<WorkManager>();
+    private final InjectedValue<XATerminator> xaTerminatorInjector = new InjectedValue<XATerminator>();
+    private final InjectedValue<TransactionManager> txnManagerInjector = new InjectedValue<TransactionManager>();
+    private final InjectedValue<BufferManager> bufferManagerInjector = new InjectedValue<BufferManager>();
+    private final InjectedValue<TranslatorRepository> translatorRepositoryInjector = new InjectedValue<TranslatorRepository>();
+    private final InjectedValue<VDBRepository> vdbRepositoryInjector = new InjectedValue<VDBRepository>();
+    private final InjectedValue<AuthorizationValidator> authorizationValidatorInjector = new InjectedValue<AuthorizationValidator>();
+    private final InjectedValue<PreParser> preParserInjector = new InjectedValue<PreParser>();
+    private final InjectedValue<SessionAwareCache> preparedPlanCacheInjector = new InjectedValue<SessionAwareCache>();
+    private final InjectedValue<SessionAwareCache> resultSetCacheInjector = new InjectedValue<SessionAwareCache>();
+    private final InjectedValue<InternalEventDistributorFactory> eventDistributorFactoryInjector = new InjectedValue<InternalEventDistributorFactory>();
+
+    @Override
     public void start(final StartContext context) {
-		this.transactionServerImpl.setXaImporter(new XAImporterImpl(getXaTerminatorInjector().getValue(), getWorkManagerInjector().getValue()));
-		this.transactionServerImpl.setTransactionManager(getTxnManagerInjector().getValue());
-		this.transactionServerImpl.setDetectTransactions(true);
-		setPreParser(preParserInjector.getValue());
-		setAuthorizationValidator(authorizationValidatorInjector.getValue());
-		this.dqpCore.setBufferManager(bufferManagerInjector.getValue());
-		
-		this.dqpCore.setTransactionService((TransactionService)LogManager.createLoggingProxy(LogConstants.CTX_TXN_LOG, transactionServerImpl, new Class[] {TransactionService.class}, MessageLevel.DETAIL, Thread.currentThread().getContextClassLoader()));
-		this.dqpCore.setEventDistributor(getEventDistributorFactoryInjector().getValue().getReplicatedEventDistributor());
-		this.dqpCore.setResultsetCache(getResultSetCacheInjector().getValue());
-		this.dqpCore.setPreparedPlanCache(getPreparedPlanCacheInjector().getValue());
-		this.dqpCore.start(this);
-		
-		final SessionService sessionService = (SessionService) context.getController().getServiceContainer().getService(TeiidServiceNames.SESSION).getValue();
-		ServiceController<?> repo = context.getController().getServiceContainer().getRequiredService(TeiidServiceNames.BUFFER_MGR);
-		this.jmx = new JMXService(this.dqpCore, BufferManagerService.class.cast(repo.getService()), sessionService);
-		this.jmx.registerBeans();
-		
-    	// add vdb life cycle listeners
-    	getVdbRepository().addListener(new VDBLifeCycleListener() {
-			
-			@Override
-			public void removed(String name, CompositeVDB vdb) {
-				// terminate all the previous sessions
-				Collection<SessionMetadata> sessions = sessionService.getSessionsLoggedInToVDB(vdb.getVDBKey());
-				for (SessionMetadata session:sessions) {
-					sessionService.terminateSession(session.getSessionId(), null);
-				}
-			        
-				// dump the caches. 
-				try {
-			        SessionAwareCache<?> value = getResultSetCacheInjector().getValue();
-					if (value != null) {
-			        	value.clearForVDB(vdb.getVDBKey());
-			        }
-			        value = getPreparedPlanCacheInjector().getValue();
-					if (value != null) {
-			        	value.clearForVDB(vdb.getVDBKey());
-			        }
-				} catch (IllegalStateException e) {
-					//already shutdown
-				}
-			}
-			
-			@Override
-			public void added(String name, CompositeVDB vdb) {
-			}
+        this.transactionServerImpl.setXaImporter(new XAImporterImpl(getXaTerminatorInjector().getValue(), getWorkManagerInjector().getValue()));
+        this.transactionServerImpl.setTransactionManager(getTxnManagerInjector().getValue());
+        this.transactionServerImpl.setDetectTransactions(true);
+        setPreParser(preParserInjector.getValue());
+        setAuthorizationValidator(authorizationValidatorInjector.getValue());
+        this.dqpCore.setBufferManager(bufferManagerInjector.getValue());
 
-			@Override
-			public void finishedDeployment(String name, CompositeVDB cvdb) {
-			}			
-			
-			@Override
-			public void beforeRemove(String name, CompositeVDB cvdb) {
-			}
-		}); 		
+        this.dqpCore.setTransactionService((TransactionService)LogManager.createLoggingProxy(LogConstants.CTX_TXN_LOG, transactionServerImpl, new Class[] {TransactionService.class}, MessageLevel.DETAIL, Thread.currentThread().getContextClassLoader()));
+        this.dqpCore.setEventDistributor(getEventDistributorFactoryInjector().getValue().getReplicatedEventDistributor());
+        this.dqpCore.setResultsetCache(getResultSetCacheInjector().getValue());
+        this.dqpCore.setPreparedPlanCache(getPreparedPlanCacheInjector().getValue());
+        this.dqpCore.start(this);
 
-    	LogManager.logInfo(LogConstants.CTX_RUNTIME, IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50001, this.dqpCore.getRuntimeVersion(), new Date(System.currentTimeMillis()).toString()));
-	}	
-	
-	@Override
-	public DQPCore getValue() throws IllegalStateException, IllegalArgumentException {
-		return this.dqpCore;
-	}
-    
-	@Override
-    public void stop(StopContext context) {
-    	try {
-	    	this.dqpCore.stop();
-    	} catch(TeiidRuntimeException e) {
-    		// this bean is already shutdown
-    	}
-    	if (this.jmx != null) {
-    	    jmx.unregisterBeans();
-    	    jmx = null;
-    	}
-    	LogManager.logInfo(LogConstants.CTX_RUNTIME, IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50002, new Date(System.currentTimeMillis()).toString())); 
+        final SessionService sessionService = (SessionService) context.getController().getServiceContainer().getService(TeiidServiceNames.SESSION).getValue();
+        ServiceController<?> repo = context.getController().getServiceContainer().getRequiredService(TeiidServiceNames.BUFFER_MGR);
+        this.jmx = new JMXService(this.dqpCore, BufferManagerService.class.cast(repo.getService()), sessionService);
+        this.jmx.registerBeans();
+
+        // add vdb life cycle listeners
+        getVdbRepository().addListener(new VDBLifeCycleListener() {
+
+            @Override
+            public void removed(String name, CompositeVDB vdb) {
+                // terminate all the previous sessions
+                Collection<SessionMetadata> sessions = sessionService.getSessionsLoggedInToVDB(vdb.getVDBKey());
+                for (SessionMetadata session:sessions) {
+                    sessionService.terminateSession(session.getSessionId(), null);
+                }
+
+                // dump the caches.
+                try {
+                    SessionAwareCache<?> value = getResultSetCacheInjector().getValue();
+                    if (value != null) {
+                        value.clearForVDB(vdb.getVDBKey());
+                    }
+                    value = getPreparedPlanCacheInjector().getValue();
+                    if (value != null) {
+                        value.clearForVDB(vdb.getVDBKey());
+                    }
+                } catch (IllegalStateException e) {
+                    //already shutdown
+                }
+            }
+
+            @Override
+            public void added(String name, CompositeVDB vdb) {
+            }
+
+            @Override
+            public void finishedDeployment(String name, CompositeVDB cvdb) {
+            }
+
+            @Override
+            public void beforeRemove(String name, CompositeVDB cvdb) {
+            }
+        });
+
+        LogManager.logInfo(LogConstants.CTX_RUNTIME, IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50001, this.dqpCore.getRuntimeVersion(), new Date(System.currentTimeMillis()).toString()));
     }
-    
-	public InjectedValue<SessionAwareCache> getResultSetCacheInjector() {
-		return resultSetCacheInjector;
-	}
-	
-	public InjectedValue<SessionAwareCache> getPreparedPlanCacheInjector() {
-		return preparedPlanCacheInjector;
-	}	
 
-	public InjectedValue<TranslatorRepository> getTranslatorRepositoryInjector() {
-		return translatorRepositoryInjector;
-	}
+    @Override
+    public DQPCore getValue() throws IllegalStateException, IllegalArgumentException {
+        return this.dqpCore;
+    }
 
-	public InjectedValue<VDBRepository> getVdbRepositoryInjector() {
-		return vdbRepositoryInjector;
-	}
-	
-	private VDBRepository getVdbRepository() {
-		return vdbRepositoryInjector.getValue();
-	}	
+    @Override
+    public void stop(StopContext context) {
+        try {
+            this.dqpCore.stop();
+        } catch(TeiidRuntimeException e) {
+            // this bean is already shutdown
+        }
+        if (this.jmx != null) {
+            jmx.unregisterBeans();
+            jmx = null;
+        }
+        LogManager.logInfo(LogConstants.CTX_RUNTIME, IntegrationPlugin.Util.gs(IntegrationPlugin.Event.TEIID50002, new Date(System.currentTimeMillis()).toString()));
+    }
 
-	public InjectedValue<AuthorizationValidator> getAuthorizationValidatorInjector() {
-		return authorizationValidatorInjector;
-	}
-	
-	public InjectedValue<PreParser> getPreParserInjector() {
-		return preParserInjector;
-	}
+    public InjectedValue<SessionAwareCache> getResultSetCacheInjector() {
+        return resultSetCacheInjector;
+    }
 
-	public InjectedValue<BufferManager> getBufferManagerInjector() {
-		return bufferManagerInjector;
-	}
+    public InjectedValue<SessionAwareCache> getPreparedPlanCacheInjector() {
+        return preparedPlanCacheInjector;
+    }
 
-	public InjectedValue<TransactionManager> getTxnManagerInjector() {
-		return txnManagerInjector;
-	}
+    public InjectedValue<TranslatorRepository> getTranslatorRepositoryInjector() {
+        return translatorRepositoryInjector;
+    }
 
-	public InjectedValue<XATerminator> getXaTerminatorInjector() {
-		return xaTerminatorInjector;
-	}
+    public InjectedValue<VDBRepository> getVdbRepositoryInjector() {
+        return vdbRepositoryInjector;
+    }
 
-	public InjectedValue<WorkManager> getWorkManagerInjector() {
-		return workManagerInjector;
-	}
+    private VDBRepository getVdbRepository() {
+        return vdbRepositoryInjector.getValue();
+    }
 
-	public InjectedValue<InternalEventDistributorFactory> getEventDistributorFactoryInjector() {
-		return eventDistributorFactoryInjector;
-	}
+    public InjectedValue<AuthorizationValidator> getAuthorizationValidatorInjector() {
+        return authorizationValidatorInjector;
+    }
+
+    public InjectedValue<PreParser> getPreParserInjector() {
+        return preParserInjector;
+    }
+
+    public InjectedValue<BufferManager> getBufferManagerInjector() {
+        return bufferManagerInjector;
+    }
+
+    public InjectedValue<TransactionManager> getTxnManagerInjector() {
+        return txnManagerInjector;
+    }
+
+    public InjectedValue<XATerminator> getXaTerminatorInjector() {
+        return xaTerminatorInjector;
+    }
+
+    public InjectedValue<WorkManager> getWorkManagerInjector() {
+        return workManagerInjector;
+    }
+
+    public InjectedValue<InternalEventDistributorFactory> getEventDistributorFactoryInjector() {
+        return eventDistributorFactoryInjector;
+    }
 }

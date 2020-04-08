@@ -40,26 +40,26 @@ import com.google.api.services.sheets.v4.model.ValueRange;
  */
 public class SheetsAPI {
 
-	private Sheets service;
+    private Sheets service;
 
-	public SheetsAPI(OAuth2HeaderFactory headerFactory) {
-	    this.service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, headerFactory.getCredential())
+    public SheetsAPI(OAuth2HeaderFactory headerFactory) {
+        this.service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, headerFactory.getCredential())
                 .setApplicationName("GdataSpreadsheetBrowser") //$NON-NLS-1$
                 .build();
-	}
+    }
 
-	public Spreadsheet getSpreadsheet(String spreadsheetId) throws IOException {
+    public Spreadsheet getSpreadsheet(String spreadsheetId) throws IOException {
         return this.service.spreadsheets().get(spreadsheetId).execute();
-	}
-	
+    }
+
     /**
      * Insert row into spreadsheet
-     * @param spreadsheetKey  key that identifies spreadsheet
-     * @param pairs  key that identifies worksheet
-     * @param worksheet name - value pair that should be inserted into spreadsheet
+     * @param spreadsheetId spreadsheet identifier
+     * @param pairs name - value pair that should be inserted into spreadsheet
+     * @param worksheet
      * @return 1 if the row is successfully inserted
      */
-	public UpdateResult insert(String spreadsheetId, Map<String, Object> pairs, Worksheet worksheet) {
+    public UpdateResult insert(String spreadsheetId, Map<String, Object> pairs, Worksheet worksheet) {
         ValueRange content = new ValueRange();
 
         List<Object> row = new ArrayList<>();
@@ -74,10 +74,10 @@ public class SheetsAPI {
             }
             row.add(value);
         }
-        
+
         content.setValues(Arrays.asList(row));
-        
-		try {
+
+        try {
             service.spreadsheets().values()
             .append(spreadsheetId, worksheet.getName(), content)
             .setValueInputOption("USER_ENTERED") //$NON-NLS-1$ -- TODO: this could be configurable
@@ -85,8 +85,8 @@ public class SheetsAPI {
         } catch (IOException e) {
             throw new SpreadsheetOperationException("Error inserting spreadsheet row", e);
         }
-	    
-		return new UpdateResult(1, 1);
-	}
-	
+
+        return new UpdateResult(1, 1);
+    }
+
 }

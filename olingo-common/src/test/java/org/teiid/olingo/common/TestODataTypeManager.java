@@ -20,6 +20,8 @@ package org.teiid.olingo.common;
 
 import static org.junit.Assert.*;
 
+import java.sql.Timestamp;
+
 import org.apache.olingo.commons.core.edm.primitivetype.EdmGeographyPoint;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmGeometryPoint;
 import org.junit.Test;
@@ -38,10 +40,10 @@ public class TestODataTypeManager {
         assertEquals("GeometryMultiPolygon", ODataTypeManager.odataType(c).name());
         c.setProperty(BaseColumn.SPATIAL_TYPE, "LINESTRING"); //$NON-NLS-1$
         assertEquals("GeometryLineString", ODataTypeManager.odataType(c).name());
-        
+
         assertEquals("geometry", ODataTypeManager.teiidType(EdmGeometryPoint.getInstance(), false));
     }
-    
+
     @Test public void testGeographyTypes() {
         Column c = new Column();
         c.setDatatype(SystemMetadata.getInstance().getRuntimeTypeMap().get(DefaultDataTypes.GEOGRAPHY));
@@ -49,8 +51,22 @@ public class TestODataTypeManager {
         assertEquals("GeographyMultiLineString", ODataTypeManager.odataType(c).name());
         c.setProperty(BaseColumn.SPATIAL_TYPE, "POLYGON"); //$NON-NLS-1$
         assertEquals("GeographyPolygon", ODataTypeManager.odataType(c).name());
-        
+
         assertEquals("geography", ODataTypeManager.teiidType(EdmGeographyPoint.getInstance(), false));
     }
-    
+
+    @Test public void testTimestampPrecision() {
+        Timestamp value = new Timestamp(1234);
+        value.setNanos(56789);
+        Timestamp corrected = (Timestamp)ODataTypeManager.rationalizePrecision(0, null, value);
+        assertEquals(0, corrected.getNanos());
+
+        corrected = (Timestamp)ODataTypeManager.rationalizePrecision(5, null, value);
+        assertEquals(50000, corrected.getNanos());
+
+        corrected = (Timestamp)ODataTypeManager.rationalizePrecision(8, null, value);
+        assertEquals(56780, corrected.getNanos());
+    }
+
+
 }

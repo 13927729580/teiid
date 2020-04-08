@@ -24,31 +24,31 @@ import org.teiid.query.sql.*;
 
 
 /**
- * A logical criteria that takes the logical NOT of the contained criteria.  
- * That is, if the contained criteria returns true, this criteria returns 
+ * A logical criteria that takes the logical NOT of the contained criteria.
+ * That is, if the contained criteria returns true, this criteria returns
  * false.  For example:  "NOT (element = 5)"
  */
 public class NotCriteria extends AtomicCriteria {
 
-	/**
-	 * Constructs a default instance of this class.
-	 */
-	public NotCriteria() {
-	}
+    /**
+     * Constructs a default instance of this class.
+     */
+    public NotCriteria() {
+    }
 
-	/**
-	 * Constructs an instance of this class with sub-criteria.
-	 * @param crit Contained criteria
-	 */
-	public NotCriteria(Criteria crit) {
-		super(crit);
-	}
+    /**
+     * Constructs an instance of this class with sub-criteria.
+     * @param crit Contained criteria
+     */
+    public NotCriteria(Criteria crit) {
+        super(crit);
+    }
 
     public void acceptVisitor(LanguageVisitor visitor) {
         visitor.visit(this);
     }
-	
-    
+
+
     /**
      * Compare equality of two AtomicCriteria.
      * @param obj Other object
@@ -62,7 +62,7 @@ public class NotCriteria extends AtomicCriteria {
         if(!(obj instanceof NotCriteria)) {
             return false;
         }
-        
+
         return EquivalenceUtil.areEqual(getCriteria(), ((NotCriteria)obj).getCriteria());
     }
 
@@ -73,13 +73,13 @@ public class NotCriteria extends AtomicCriteria {
     public int hashCode() {
         return HashCodeUtil.hashCode(0, getCriteria());
     }
-	
-	/**
-	 * Deep copy of object
-	 * @return Deep copy of object
-	 */
-	public Object clone() {
-		return new NotCriteria( (Criteria) getCriteria().clone() );  
-	}
-	
+
+    /**
+     * Deep copy of object
+     * @return Deep copy of object
+     */
+    public Object clone() {
+        return new NotCriteria( (Criteria) getCriteria().clone() );
+    }
+
 }

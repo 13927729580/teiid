@@ -45,60 +45,60 @@ import org.teiid.translator.loopback.LoopbackExecutionFactory;
 @SuppressWarnings("nls")
 public class TestASTQueries {
 
-	private static EmbeddedServer server;
-	
-	@BeforeClass public static void setUp() throws Exception {
-    	server = new EmbeddedServer();
-    	server.start(new EmbeddedConfiguration());
-    	LoopbackExecutionFactory loopy = new LoopbackExecutionFactory();
-    	loopy.setRowCount(10);
-    	loopy.start();
-    	server.addTranslator("l", loopy);
-    	
-    	String DDL = "CREATE FOREIGN TABLE G1 (e1 string, e2 integer);";
-    	ModelMetaData model = new ModelMetaData();
-    	model.setName("PM1");
-    	model.setModelType(Model.Type.PHYSICAL);
-    	model.setSchemaSourceType("DDL");
-    	model.setSchemaText(DDL);
-    	SourceMappingMetadata sm = new SourceMappingMetadata();
-    	sm.setName("loopy");
-    	sm.setTranslatorName("l");
-    	model.addSourceMapping(sm);
-    	server.deployVDB("test", model);
-    }
-	
-	@AfterClass public static void tearDown() throws Exception {
-		server.stop();
-	}
+    private static EmbeddedServer server;
 
-	@Test public void testAST() throws Exception {
-		TeiidDriver td = server.getDriver();
-		Connection c = td.connect("jdbc:teiid:test", new Properties());
-		EmbeddedConnection ec = c.unwrap(EmbeddedConnection.class);
-		TeiidPreparedStatement tps = ec.prepareStatement(sampleQuery(), new EmbeddedRequestOptions());
-		ResultSet rs = tps.executeQuery();
-		assertNotNull(rs);
-		int count = 0;
-		while (rs.next()) {
-			count++;
-		}
-		assertEquals(10, count);
-		rs.close();
-	}
-	
+    @BeforeClass public static void setUp() throws Exception {
+        server = new EmbeddedServer();
+        server.start(new EmbeddedConfiguration());
+        LoopbackExecutionFactory loopy = new LoopbackExecutionFactory();
+        loopy.setRowCount(10);
+        loopy.start();
+        server.addTranslator("l", loopy);
+
+        String DDL = "CREATE FOREIGN TABLE G1 (e1 string, e2 integer);";
+        ModelMetaData model = new ModelMetaData();
+        model.setName("PM1");
+        model.setModelType(Model.Type.PHYSICAL);
+        model.setSchemaSourceType("DDL");
+        model.setSchemaText(DDL);
+        SourceMappingMetadata sm = new SourceMappingMetadata();
+        sm.setName("loopy");
+        sm.setTranslatorName("l");
+        model.addSourceMapping(sm);
+        server.deployVDB("test", model);
+    }
+
+    @AfterClass public static void tearDown() throws Exception {
+        server.stop();
+    }
+
+    @Test public void testAST() throws Exception {
+        TeiidDriver td = server.getDriver();
+        Connection c = td.connect("jdbc:teiid:test", new Properties());
+        EmbeddedConnection ec = c.unwrap(EmbeddedConnection.class);
+        TeiidPreparedStatement tps = ec.prepareStatement(sampleQuery(), new EmbeddedRequestOptions());
+        ResultSet rs = tps.executeQuery();
+        assertNotNull(rs);
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
+        assertEquals(10, count);
+        rs.close();
+    }
+
     private Query sampleQuery() {
         List<ElementSymbol> symbols = new ArrayList<ElementSymbol>();
         symbols.add(new ElementSymbol("e1"));  //$NON-NLS-1$
         symbols.add(new ElementSymbol("e2"));  //$NON-NLS-1$
         Select select = new Select(symbols);
-           
+
         From from = new From();
         from.addGroup(new GroupSymbol("G1")); //$NON-NLS-1$
-        
+
         Query query = new Query();
         query.setSelect(select);
         query.setFrom(from);
         return query;
-    }	
+    }
 }

@@ -4,7 +4,7 @@
 # START DATABASE empty
 ###########################################
 */
-CREATE DATABASE empty VERSION '2' OPTIONS ("connection-type" 'BY_VERSION');
+CREATE DATABASE empty VERSION '2';
 USE DATABASE empty VERSION '2';
 
 --############ Translators ############
@@ -12,7 +12,7 @@ CREATE FOREIGN DATA WRAPPER y;
 
 
 --############ Servers ############
-CREATE SERVER z FOREIGN DATA WRAPPER y OPTIONS ("jndi-name" 'z');
+CREATE SERVER z FOREIGN DATA WRAPPER y OPTIONS ("resource-name" 'z');
 
 
 --############ Schemas ############
@@ -20,7 +20,7 @@ CREATE SCHEMA PM1 SERVER z;
 
 
 --############ Roles ############
-CREATE ROLE admin WITH JAAS ROLE superuser;
+CREATE ROLE admin WITH FOREIGN ROLE superuser;
 
 
 --############ Schema:PM1 ############

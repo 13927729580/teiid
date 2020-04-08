@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.basepom</groupId>
         <artifactId>basepom-oss</artifactId>
-        <version>25</version>
+        <version>28</version>
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
 	<packaging>pom</packaging>
 	<name>Teiid</name>
 
-    <version>12.2.0-SNAPSHOT</version>
+    <version>14.0.0-SNAPSHOT</version>
 	<description>Federated SQL and XML query engine.</description>
 	<properties>		
 	    <site.url>http://teiid.io</site.url>
@@ -23,9 +23,8 @@
         <jdk.min.version>1.8</jdk.min.version>
         
         <basepom.git-id.skip>false</basepom.git-id.skip>
-        <basepom.check.skip-checkstyle>true</basepom.check.skip-checkstyle>
         <basepom.check.skip-license>true</basepom.check.skip-license>
-        <basepom.check.skip-findbugs>true</basepom.check.skip-findbugs>
+        <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
         <!-- some modules, especially on a build server will exceed the 30 second default -->
         <basepom.test.timeout>600</basepom.test.timeout>
         
@@ -61,18 +60,19 @@
         <version.ant-contrib>1.0b3</version.ant-contrib>
         <version.aws-java-sdk>1.11.0</version.aws-java-sdk>
                 
-        <version.cassandra-driver-core>3.5.1</version.cassandra-driver-core>
+        <version.cassandra-driver-core>3.7.1</version.cassandra-driver-core>
         <version.com.couchbase.client>2.4.2</version.com.couchbase.client>
         <version.com.fasterxml.aalto-xml>0.9.10</version.com.fasterxml.aalto-xml>
-        <version.com.fasterxml.jackson.core>2.9.8</version.com.fasterxml.jackson.core>
-        <version.com.fasterxml.jackson.dataformat>2.9.8</version.com.fasterxml.jackson.dataformat>
+        <version.com.fasterxml.jackson.core>2.9.10</version.com.fasterxml.jackson.core>
+        <version.com.fasterxml.jackson.dataformat>2.9.10</version.com.fasterxml.jackson.dataformat>
+        <version.com.fasterxml.jackson.core.jackson-databind>2.9.10.2</version.com.fasterxml.jackson.core.jackson-databind>
         <version.com.force.api.34>34.0.0</version.com.force.api.34>
         <version.com.force.api.41>45.1.0</version.com.force.api.41>
         <version.com.google.code.findbugs>2.0.1</version.com.google.code.findbugs>
-        <version.com.google.guava>25.0-jre</version.com.google.guava>
+        <version.com.google.guava>27.0.1-jre</version.com.google.guava>
         <version.com.googlecode.json-simple>1.1.1</version.com.googlecode.json-simple>      
         
-        <version.commons-configuration>1.6</version.commons-configuration>
+        <version.commons-configuration>1.7</version.commons-configuration>
         <version.commons-logging>1.2</version.commons-logging>
         <version.commons-net>3.5</version.commons-net>
 
@@ -80,15 +80,15 @@
         <version.de.flapdoodle.embed.process>2.1.2</version.de.flapdoodle.embed.process>
 
         <version.gdata-core>1.47.1</version.gdata-core>
-        <version.hadoop-common>2.6.4</version.hadoop-common>
+        <version.hadoop-common>3.1.1</version.hadoop-common>
         
         <version.google-api-services-sheets>v4-rev502-1.23.0</version.google-api-services-sheets>
         <version.google-api-client>1.23.0</version.google-api-client>
 
         <version.io.dropwizard.metrics.metrics-core>3.2.2</version.io.dropwizard.metrics.metrics-core>
-        <version.io.swagger>1.5.21</version.io.swagger>
+        <version.io.swagger>1.5.22</version.io.swagger>
 
-        <version.javax.validation>1.1.0.Final</version.javax.validation>
+        <version.javax.validation>2.0.1.Final</version.javax.validation>
         <version.jts>1.16.0</version.jts>
         <version.jts2geojson>0.13.0</version.jts2geojson>
         <version.junit>4.12</version.junit>
@@ -97,17 +97,17 @@
         
         <version.olap4j>1.1.0</version.olap4j>
 
-        <version.org.apache.ant>1.8.2</version.org.apache.ant>
-        <version.org.apache.olingo>4.5.0</version.org.apache.olingo>
+        <version.org.apache.ant>1.10.6</version.org.apache.ant>
+        <version.org.apache.olingo>4.7.1</version.org.apache.olingo>
         <version.org.apache.phoenix.phoenix-core>4.2.1</version.org.apache.phoenix.phoenix-core>
-        <version.org.apache.poi>3.13</version.org.apache.poi>
+        <version.org.apache.poi>3.17</version.org.apache.poi>
         <version.org.apache.xmlbeans>2.6.0</version.org.apache.xmlbeans>
         <version.org.antlr>4.5</version.org.antlr>
         <version.org.codehaus.btm>2.1.3</version.org.codehaus.btm>
         <version.org.codehaus.groovy>2.4.4</version.org.codehaus.groovy>
         <version.org.codehaus.woodstox>4.4.1</version.org.codehaus.woodstox>
         <version.org.dbunit>2.2</version.org.dbunit>
-        <version.org.eclipse.jetty>9.2.7.v20150116</version.org.eclipse.jetty>
+        <version.org.eclipse.jetty>9.4.20.v20190813</version.org.eclipse.jetty>
         <version.org.eclipse.persistence>2.5.0</version.org.eclipse.persistence>
         <version.org.eclipse.persistence.javax>2.1.0</version.org.eclipse.persistence.javax>
         <version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api>1.0.2.Final</version.org.hibernate.javax.persistence.hibernate-jpa-2.1-api><version.org.mockito>1.10.19</version.org.mockito>
@@ -115,8 +115,6 @@
         <version.org.mockito>1.10.19</version.org.mockito>
         <version.org.mongodb.mongo-java-driver>3.9.1</version.org.mongodb.mongo-java-driver>
         <version.org.reflections>0.9.11</version.org.reflections>
-        <version.org.springframework>3.2.12.RELEASE</version.org.springframework>
-        <version.org.springframework.asm>3.1.4.RELEASE</version.org.springframework.asm>
         
         <version.net.oauth.core>20100527</version.net.oauth.core>
         <version.net.sourceforge.saxon>9.8.0-14</version.net.sourceforge.saxon>
@@ -128,25 +126,30 @@
         <version.release.plugin>2.5</version.release.plugin>
         <version.solr>6.4.1</version.solr>
         <version.sun.jaxb>2.3.0</version.sun.jaxb>      
-        <version.swagger-parser>1.0.33</version.swagger-parser>
-
+        <version.swagger-parser>1.0.44</version.swagger-parser>
+        <version.swagger-parser.v3>2.0.12</version.swagger-parser.v3>
         <version.xml-apis>1.4.01</version.xml-apis>
 
-        <version.zookeeper>3.4.10</version.zookeeper>
+        <version.zookeeper>3.4.14</version.zookeeper>
 
         
         <!-- Infinispan Translator -->
-        <version.org.infinispan>9.1.2.Final</version.org.infinispan>
-        <version.org.apache.lucene>5.5.0</version.org.apache.lucene>
-        <version.com.squareup>4.0.3</version.com.squareup>
+        <version.org.infinispan>10.0.1.Final</version.org.infinispan>
+        <version.protostream>4.3.0.Final</version.protostream>
         
         <!--  Data Quality -->
         <version.com.github.mpkorstanje>3.0.0</version.com.github.mpkorstanje>
-        <version.org.arrahtec>6.1.9</version.org.arrahtec>
+        <version.org.arrahtec>6.2.6</version.org.arrahtec>
         
         <!-- OpenTracing -->
         <version.opentracing.concurrent>0.1.0</version.opentracing.concurrent>
         <version.opentracing>0.31.0</version.opentracing>
+
+        <version.xerces>2.12.0</version.xerces>
+        <version.org.slf4j>1.7.28</version.org.slf4j>
+        
+        <version.caffeine>2.8.0</version.caffeine>
+        <version.org.checkerframework>2.10.0</version.org.checkerframework>
 	</properties>
 	<scm>
         <connection>scm:git:git://github.com/teiid/teiid.git</connection>
@@ -199,16 +202,34 @@
 	</developers>
 	<profiles>
         <profile>
+            <id>wildfly</id>
+            <modules>
+                <module>wildfly</module>
+            </modules>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <!-- until the builds are separate, needs to match wildfly -->
+                            <version>1.6.8</version>
+                        </plugin>
+                    </plugins>
+                 </pluginManagement>
+             </build>
+        </profile>
+        
+        <profile>
         <id>default</id>
         <activation>
             <activeByDefault>true</activeByDefault>
         </activation>
         <properties>
             <basepom.check.skip-dependency-versions-check>false</basepom.check.skip-dependency-versions-check>
+            <basepom.check.skip-javadoc>false</basepom.check.skip-javadoc>
+            <basepom.check.fail-javadoc>true</basepom.check.fail-javadoc>
         </properties>
-        <modules>
-            <module>wildfly</module>
-        </modules>
         </profile>
 	<!-- This profile is activated manually, as in "mvn ... -P release ..." -->
 	<profile>
@@ -257,8 +278,7 @@
 		</build>
 	</profile>
 	<profile>
-		<!-- This is for building the core teiid, without wildfly. Also, don't 
-			do gpg signing. -->
+		<!-- This is for building the core teiid. Also, don't do gpg signing. -->
 		<id>core-release</id>
 		<modules>
 			<module>build</module>
@@ -279,7 +299,6 @@
 		</properties>
 		<modules>
 			<module>build</module>
-			<module>wildfly</module>
 		</modules>
 	</profile>   
 	</profiles>
@@ -303,12 +322,6 @@
                 <version>1.8</version>
             </plugin>
                 
-            <plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.3</version>
-		    </plugin>       
-		    
 		    <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -326,6 +339,15 @@
                     </execution>
                 </executions>
             </plugin>
+            
+             <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+				</configuration>
+			</plugin>
 		</plugins>
 	</pluginManagement>
 	<plugins>
@@ -351,7 +373,8 @@
           </dependency>
         </dependencies>
         <executions>
-          <execution>
+          <!-- basepom does not explicitly set many versions -->
+          <!-- <execution>
             <id>enforce-plugin-versions</id>
             <goals>
               <goal>enforce</goal>
@@ -364,7 +387,7 @@
                 </requirePluginVersions>
               </rules>
             </configuration>
-          </execution>
+          </execution>-->
 
           <execution>
             <id>no-managed-deps</id>
@@ -426,28 +449,6 @@
         </executions>
       </plugin>
         
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-checkstyle-plugin</artifactId>
-			<executions>
-				<execution>
-					<id>verify-style</id>
-					<phase>process-classes</phase>
-					<goals>
-						<goal>check</goal>
-					</goals>
-				</execution>
-			</executions>
-			<configuration>
-				<logViolationsToConsole>true</logViolationsToConsole>
-				<failOnViolation>false</failOnViolation>
-				<checkstyleRules>
-					<module name="Checker">
-						<module name="FileTabCharacter" />
-					</module>
-				</checkstyleRules>
-			</configuration>
-		</plugin>
 		<plugin>
 			<artifactId>maven-surefire-plugin</artifactId>
 			<configuration>
@@ -533,15 +534,9 @@
             <artifactId>hamcrest-core</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-            <groupId>com.github.stephenc.jcip</groupId>
-            <artifactId>jcip-annotations</artifactId>
-            <scope>test</scope>
-        </dependency>
    </dependencies>
    <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>ant-contrib</groupId>
                 <artifactId>ant-contrib</artifactId>
@@ -565,6 +560,21 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xercesImpl</artifactId>
+                <version>${version.xerces}</version>
+            </dependency>
+            <dependency>
+                <groupId>xalan</groupId>
+                <artifactId>xalan</artifactId>
+                <version>2.7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.2</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.amazonaws</groupId>
@@ -725,7 +735,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${version.com.fasterxml.jackson.core}</version>
+                <version>${version.com.fasterxml.jackson.core.jackson-databind}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -741,7 +751,6 @@
                 <groupId>com.github.stephenc.jcip</groupId>
                 <artifactId>jcip-annotations</artifactId>
                 <version>${version.jcip-annotations}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.google.api-client</groupId>
@@ -800,7 +809,11 @@
                 <artifactId>jts-core</artifactId>
                 <version>${version.jts}</version>
             </dependency>
-            
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.3</version>
+            </dependency>
             <dependency>
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
@@ -857,7 +870,12 @@
                <version>${version.opentracing}</version>
                <scope>test</scope>
             </dependency>
-            
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-ext</artifactId>
+                <version>${version.org.slf4j}</version>
+            </dependency>
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-jaxrs</artifactId>
@@ -866,6 +884,10 @@
                     <exclusion>
                         <groupId>javax.ws.rs</groupId>
                         <artifactId>jsr311-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -888,8 +910,24 @@
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-parser</artifactId>
                 <version>${version.swagger-parser}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
-
+            <dependency>
+              <groupId>io.swagger.parser.v3</groupId>
+              <artifactId>swagger-parser</artifactId>
+              <version>${version.swagger-parser.v3}</version>
+              <exclusions>
+                <exclusion>
+                  <groupId>com.google.guava</groupId>
+                  <artifactId>guava</artifactId>
+                </exclusion>
+              </exclusions>
+            </dependency>
             <dependency>
                 <groupId>jline</groupId>
                 <artifactId>jline</artifactId>
@@ -932,6 +970,11 @@
                 <version>${version.org.antlr}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-client</artifactId>
+                <version>2.8.5</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.accumulo</groupId>
                 <artifactId>accumulo-core</artifactId>
@@ -989,16 +1032,54 @@
                 <groupId>org.apache.olingo</groupId>
                 <artifactId>odata-server-api</artifactId>
                 <version>${version.org.apache.olingo}</version>
+                <exclusions>
+                	<exclusion>
+                		<groupId>io.netty</groupId>
+                		<artifactId>netty-codec-http</artifactId>
+                	</exclusion>
+                </exclusions>                
             </dependency>
             <dependency>
                 <groupId>org.apache.olingo</groupId>
                 <artifactId>odata-server-core</artifactId>
                 <version>${version.org.apache.olingo}</version>
+                <exclusions>
+                	<exclusion>
+                		<groupId>io.netty</groupId>
+                		<artifactId>netty-all</artifactId>
+                	</exclusion>
+                	<exclusion>
+                		<groupId>io.netty</groupId>
+                		<artifactId>netty-codec-http</artifactId>
+                	</exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>                  	
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.olingo</groupId>
                 <artifactId>odata-server-core-ext</artifactId>
                 <version>${version.org.apache.olingo}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>                
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-annotations</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.olingo</groupId>
@@ -1009,6 +1090,28 @@
                 <groupId>org.apache.olingo</groupId>
                 <artifactId>odata-client-core</artifactId>
                 <version>${version.org.apache.olingo}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-databind</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.core</groupId>
+                        <artifactId>jackson-annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.fasterxml.jackson.dataformat</groupId>
+                        <artifactId>jackson-dataformat-xml</artifactId>
+                    </exclusion>
+                    <exclusion>
+			            <groupId>com.fasterxml</groupId>
+			            <artifactId>aalto-xml</artifactId>                    
+                    </exclusion>                                         
+                </exclusions>                
             </dependency>
             <dependency>
                 <groupId>org.apache.phoenix</groupId>
@@ -1055,10 +1158,37 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- transitive overrides to org.arrahtec -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queryparser</artifactId>
+                <version>7.1.0</version>
+            </dependency>
             <dependency>
                 <groupId>org.arrahtec</groupId>
                 <artifactId>osdq-core</artifactId>
                 <version>${version.org.arrahtec}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-analyzers-common</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -1213,43 +1343,14 @@
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${version.org.reflections}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>guava</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-asm</artifactId>
-                <version>${version.org.springframework.asm}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-expression</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-tx</artifactId>
-                <version>${version.org.springframework}</version>
-            </dependency>
             <dependency>
                 <groupId>org.wololo</groupId>
                 <artifactId>jts2geojson</artifactId>
@@ -1299,17 +1400,6 @@
             </dependency>
             <dependency>
                 <groupId>org.teiid</groupId>
-                <artifactId>teiid-admin</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.teiid</groupId>
-                <artifactId>teiid-admin</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-            </dependency>
-            <dependency>
-                <groupId>org.teiid</groupId>
                 <artifactId>teiid-client</artifactId>
                 <type>test-jar</type>
                 <version>${project.version}</version>
@@ -1328,6 +1418,11 @@
             <dependency>
                 <groupId>org.teiid</groupId>
                 <artifactId>teiid-optional-xml</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid</groupId>
+                <artifactId>teiid-optional-json</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -1367,7 +1462,7 @@
             </dependency>
 		    <dependency>
 		      <groupId>org.teiid</groupId>
-		      <artifactId>cache-infinispan</artifactId>
+		      <artifactId>cache-caffeine</artifactId>
 		      <version>${project.version}</version>
 		    </dependency>              
             <dependency>
@@ -1381,11 +1476,80 @@
                 <artifactId>teiid-data-quality</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-
+            
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-jpa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-olap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-openapi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-odata4</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-simpledb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-amazon-s3</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-couchbase</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-mongodb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-prestodb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-hive</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-phoenix</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.teiid.connectors</groupId>
                 <artifactId>translator-odata</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-google</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-excel</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.teiid.connectors</groupId>
+                <artifactId>translator-ldap</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -1494,25 +1658,26 @@
                 <version>${version.xml-apis}</version>
             </dependency>
             
+            <dependency>
+	            <groupId>com.jayway.jsonpath</groupId>
+	            <artifactId>json-path</artifactId>
+	            <version>2.4.0</version>
+	        </dependency>
+	        
+	        <dependency>
+	            <groupId>net.minidev</groupId>
+	            <artifactId>json-smart</artifactId>
+	            <version>2.3</version>
+	        </dependency>
+	        
+	        <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>accessors-smart</artifactId>
+                <version>1.2</version>
+            </dependency>
+            
             <!-- dependencies that overlap with WildFly -->            
                     
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-core</artifactId>
-                <version>9.4.3.Final</version>
-                <exclusions>
-		            <exclusion>
-		                <groupId>org.jboss.spec.javax.transaction</groupId>
-		                <artifactId>jboss-transaction-api_1.2_spec</artifactId>
-		            </exclusion>
-		        </exclusions>
-            </dependency> 
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-commons</artifactId>
-                <version>9.4.3.Final</version>       
-            </dependency>  
-            
             <dependency>
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>
@@ -1521,7 +1686,7 @@
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
-                <version>3.3.2.Final</version>       
+                <version>3.4.1.Final</version>       
             </dependency>  
             
             <dependency>
@@ -1552,33 +1717,41 @@
                <groupId>com.io7m.xom</groupId>
                <artifactId>xom</artifactId>
                <version>1.2.10</version>
+               <exclusions>
+                   <exclusion>
+                       <groupId>jaxen</groupId>
+                       <artifactId>jaxen</artifactId>
+                   </exclusion>
+               </exclusions>
            </dependency>
            
            <dependency>
                <groupId>io.netty</groupId>
                <artifactId>netty-all</artifactId>
-               <version>4.1.25.Final</version>
+               <version>4.1.42.Final</version>
            </dependency>
            
            <dependency>
-               <!-- TODO: get this from the infinispan bom
-                    not explicitly used in Teiid, but referenced by Teiid Spring Boot    
-                 -->
                <groupId>com.github.ben-manes.caffeine</groupId>
                <artifactId>caffeine</artifactId>
-               <version>2.6.2</version>
+               <version>${version.caffeine}</version>
+           </dependency>
+           <dependency>
+	           <groupId>org.checkerframework</groupId>
+	           <artifactId>checker-qual</artifactId>
+	           <version>${version.org.checkerframework}</version>
            </dependency>
            
            <dependency>
-               <groupId>org.picketbox</groupId>
-               <artifactId>picketbox</artifactId>
-               <version>5.0.3.Final</version>
-           </dependency>
+               <groupId>javax.annotation</groupId>
+               <artifactId>javax.annotation-api</artifactId>
+               <version>1.3.2</version>
+           </dependency>           
            
            <dependency>
                <groupId>org.hibernate</groupId>
                <artifactId>hibernate-core</artifactId>
-               <version>5.3.7.Final</version>
+               <version>5.3.10.Final</version>
                <exclusions>
                    <exclusion>
                        <groupId>org.jboss.spec.javax.transaction</groupId>
@@ -1590,25 +1763,25 @@
            <dependency>
                <groupId>commons-codec</groupId>
                <artifactId>commons-codec</artifactId>
-               <version>1.10</version>
+               <version>1.12</version>
            </dependency>
            
            <dependency>
                <groupId>org.apache.commons</groupId>
                <artifactId>commons-lang3</artifactId>
-               <version>3.6</version>
+               <version>3.9</version>
            </dependency>
            
            <dependency>
                <groupId>org.codehaus.woodstox</groupId>
                <artifactId>stax2-api</artifactId>
-               <version>3.1.4</version>
+               <version>4.2</version>
            </dependency>
            
            <dependency>
                <groupId>commons-io</groupId>
                <artifactId>commons-io</artifactId>
-               <version>2.5</version>
+               <version>2.6</version>
            </dependency>
            
            <dependency>
@@ -1620,19 +1793,19 @@
            <dependency>
                <groupId>org.apache.httpcomponents</groupId>
                <artifactId>httpclient</artifactId>
-               <version>4.5.4</version>
+               <version>4.5.8</version>
            </dependency>
            
            <dependency>
                <groupId>org.apache.thrift</groupId>
                <artifactId>libthrift</artifactId>
-               <version>0.11.0</version>
+               <version>0.12.0</version>
            </dependency>
            
            <dependency>
                <groupId>org.jboss.resteasy</groupId>
                <artifactId>resteasy-jaxrs</artifactId>
-               <version>3.6.2.Final</version>
+               <version>3.7.0.Final</version>
                <exclusions>
                    <exclusion>
                        <groupId>org.jboss.spec.javax.ws.rs</groupId>
@@ -1715,7 +1888,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
+                <version>${version.org.slf4j}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1730,10 +1903,12 @@
     <distributionManagement>
         <repository>
             <id>oss.sonatype.org</id>
+            <name>oss.sonatype.org</name>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
         <snapshotRepository>
             <id>oss.sonatype.org</id>
+            <name>oss.sonatype.org</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
@@ -1742,13 +1917,13 @@
 		<module>common-core</module>
 		<module>api</module>
 		<module>client</module>
-		<module>admin</module>
 		<module>data-quality</module>
 		<module>engine</module>
 		<module>optional-geo</module>
 		<module>optional-xml</module>
+        <module>optional-json</module>
         <module>metadata</module>
-		<module>cache-infinispan</module>
+		<module>cache-caffeine</module>
 		<module>runtime</module>
 		<module>hibernate-dialect</module>
 		<module>eclipselink-platform</module>		

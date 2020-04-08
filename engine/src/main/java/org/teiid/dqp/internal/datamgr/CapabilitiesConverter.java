@@ -33,7 +33,7 @@ import org.teiid.translator.ExecutionFactory;
 
 
 /**
- * Utility to convert a ConnectorCapabilities class into a Map of 
+ * Utility to convert a ConnectorCapabilities class into a Map of
  * capabilities information that can be passed through the system.
  */
 public class CapabilitiesConverter {
@@ -44,7 +44,7 @@ public class CapabilitiesConverter {
     public static SourceCapabilities convertCapabilities(ExecutionFactory srcCaps) {
         return convertCapabilities(srcCaps, null);
     }
-    
+
     public static BasicSourceCapabilities convertCapabilities(ExecutionFactory srcCaps, Object connectorID) {
         BasicSourceCapabilities tgtCaps = new BasicSourceCapabilities();
         tgtCaps.setTranslator(srcCaps);
@@ -140,20 +140,21 @@ public class CapabilitiesConverter {
         tgtCaps.setCapabilitySupport(Capability.QUERY_SET_LIMIT_OFFSET, srcCaps.supportsSetQueryLimitOffset());
         tgtCaps.setCapabilitySupport(Capability.ONLY_TIMESTAMPADD_LITERAL, srcCaps.supportsOnlyTimestampAddLiteral());
         tgtCaps.setCapabilitySupport(Capability.GEOGRAPHY_TYPE, srcCaps.supportsGeographyType());
+        tgtCaps.setCapabilitySupport(Capability.PROCEDURE_PARAMETER_EXPRESSION, srcCaps.supportsProcedureParameterExpression());
         if (srcCaps.supportsPartialFiltering()) {
-        	//disable supports that could end up being not filterable
-        	tgtCaps.setCapabilitySupport(Capability.PARTIAL_FILTERS, true);
-        	Assertion.assertTrue(!srcCaps.supportsOuterJoins());
-        	Assertion.assertTrue(!srcCaps.supportsFullOuterJoins());
-        	Assertion.assertTrue(!srcCaps.supportsInlineViews());
-        	Assertion.assertTrue(!srcCaps.supportsIntersect());
-        	Assertion.assertTrue(!srcCaps.supportsExcept());
-        	Assertion.assertTrue(!srcCaps.supportsSelectExpression());
-        	Assertion.assertTrue(!srcCaps.supportsUnions());
-        	Assertion.assertTrue(!srcCaps.supportsSelectDistinct());
-        	Assertion.assertTrue(!srcCaps.supportsGroupBy());
+            //disable supports that could end up being not filterable
+            tgtCaps.setCapabilitySupport(Capability.PARTIAL_FILTERS, true);
+            Assertion.assertTrue(!srcCaps.supportsOuterJoins());
+            Assertion.assertTrue(!srcCaps.supportsFullOuterJoins());
+            Assertion.assertTrue(!srcCaps.supportsInlineViews());
+            Assertion.assertTrue(!srcCaps.supportsIntersect());
+            Assertion.assertTrue(!srcCaps.supportsExcept());
+            Assertion.assertTrue(!srcCaps.supportsSelectExpression());
+            Assertion.assertTrue(!srcCaps.supportsUnions());
+            Assertion.assertTrue(!srcCaps.supportsSelectDistinct());
+            Assertion.assertTrue(!srcCaps.supportsGroupBy());
         }
-        
+
         List<String> functions = srcCaps.getSupportedFunctions();
         if(functions != null && functions.size() > 0) {
             Iterator<String> iter = functions.iterator();
@@ -162,14 +163,14 @@ public class CapabilitiesConverter {
                 tgtCaps.setFunctionSupport(func, true);
             }
         }
-        
+
         List<FunctionMethod> pushDowns = srcCaps.getPushDownFunctions();
         if(pushDowns != null && pushDowns.size() > 0) {
             for(FunctionMethod func:pushDowns) {
                 tgtCaps.setFunctionSupport(func.getName(), true);
             }
         }
-        
+
         tgtCaps.setSourceProperty(Capability.MAX_IN_CRITERIA_SIZE, new Integer(srcCaps.getMaxInCriteriaSize()));
         tgtCaps.setSourceProperty(Capability.MAX_DEPENDENT_PREDICATES, new Integer(srcCaps.getMaxDependentInPredicates()));
         tgtCaps.setSourceProperty(Capability.CONNECTOR_ID, connectorID);
@@ -184,17 +185,17 @@ public class CapabilitiesConverter {
         return tgtCaps;
     }
 
-	private static void setSupports(Object connectorID, BasicSourceCapabilities tgtCaps, Capability cap, boolean supports, Capability... required) {
-		if (!supports) {
-			return;
-		}
-		for (Capability capability : required) {
-			if (!tgtCaps.supportsCapability(capability)) {
-				LogManager.logWarning(LogConstants.CTX_CONNECTOR, QueryPlugin.Util.gs(QueryPlugin.Event.TEIID30003, cap, capability, connectorID));
-				supports = false;
-			}
-		}
-		tgtCaps.setCapabilitySupport(cap, supports);
-	}
+    private static void setSupports(Object connectorID, BasicSourceCapabilities tgtCaps, Capability cap, boolean supports, Capability... required) {
+        if (!supports) {
+            return;
+        }
+        for (Capability capability : required) {
+            if (!tgtCaps.supportsCapability(capability)) {
+                LogManager.logWarning(LogConstants.CTX_CONNECTOR, QueryPlugin.Util.gs(QueryPlugin.Event.TEIID30003, cap, capability, connectorID));
+                supports = false;
+            }
+        }
+        tgtCaps.setCapabilitySupport(cap, supports);
+    }
 
 }

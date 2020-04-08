@@ -24,8 +24,8 @@ import java.sql.Timestamp;
  */
 public class FakeWorkItem implements Runnable {
 
-	private static boolean DEBUG = false;
-	
+    private static boolean DEBUG = false;
+
     long begin = 0;
     long end = 0;
     private long waitTime;
@@ -37,31 +37,28 @@ public class FakeWorkItem implements Runnable {
         this.waitTime = waitTime;
     }
 
-    /**
-     * @see com.metamatrix.common.queue.QueueWorker#process(Object)
-     */
     public void run() {
         if(begin == 0) {
             begin = System.currentTimeMillis();
         }
 
         log("Processing"); //$NON-NLS-1$
-        
-        // Sleep for time       
-        try { 
+
+        // Sleep for time
+        try {
             Thread.sleep(waitTime);
         } catch(Exception e) {
         }
-        
+
         end = System.currentTimeMillis();
         log("Done");    //$NON-NLS-1$
     }
-    
+
     private void log(String msg) {
-    	if (DEBUG) {
-    		System.out.println((new Timestamp(System.currentTimeMillis())).toString() + " " +  //$NON-NLS-1$
-    				Thread.currentThread().getName() + ": " + msg);     //$NON-NLS-1$
-    	}
+        if (DEBUG) {
+            System.out.println((new Timestamp(System.currentTimeMillis())).toString() + " " +  //$NON-NLS-1$
+                    Thread.currentThread().getName() + ": " + msg);     //$NON-NLS-1$
+        }
     }
 
 }

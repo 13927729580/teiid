@@ -27,11 +27,11 @@ public final class FileUtils {
     private FileUtils() {}
 
     public static String getBaseFileNameWithoutExtension(String path) {
-    	return StringUtil.getFirstToken(StringUtil.getLastToken(path, "/"), "."); //$NON-NLS-1$ //$NON-NLS-2$
+        return StringUtil.getFirstToken(StringUtil.getLastToken(path, "/"), "."); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
+
     public static void removeDirectoryAndChildren(File directory) {
-        removeChildrenRecursively(directory);        
+        removeChildrenRecursively(directory);
         if(!directory.delete()) {
             directory.deleteOnExit();
         }
@@ -45,22 +45,18 @@ public final class FileUtils {
                 if (file.isDirectory()) {
                     removeDirectoryAndChildren(file);
                 } else {
-                    if(!file.delete()) {
-                        file.deleteOnExit();
-                    }   
+                    remove(file);
                 }
             }
-        }        
+        }
     }
 
     public static void remove(File file) {
         if (file.exists()) {
-            file.delete();
-        }  
-    }   
-
-    public static void remove(String filePath) {
-        remove(new File(filePath));  
+            if(!file.delete()) {
+                file.deleteOnExit();
+            }
+        }
     }
-   
+
 }

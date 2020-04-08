@@ -27,7 +27,7 @@ import org.teiid.translator.TranslatorException;
  * Simple interface for the filesystem
  */
 public interface VirtualFileConnection extends Connection {
-	
+
     /**
      * Return a list of files by a given file pattern
      * @param namePattern - the syntax and pattern
@@ -35,14 +35,13 @@ public interface VirtualFileConnection extends Connection {
      * @throws TranslatorException
      */
     VirtualFile[] getFiles(String namePattern) throws TranslatorException;
-    
+
     /**
      * Add a file
-     * @param file
      * @throws TranslatorException
      */
     void add(InputStream in, String path) throws TranslatorException;
-    
+
     /**
      * Remove a file
      * @param path
@@ -50,25 +49,24 @@ public interface VirtualFileConnection extends Connection {
      * @throws TranslatorException
      */
     boolean remove(String path) throws TranslatorException;
-	
-	public static class Util {
-		
-		/**
-		 * Gets the file or files, if the path is a directory, at the given path.  
-		 * Note the path can only refer to a single directory - directories are not recursively scanned.
-		 * @param exceptionIfFileNotFound 
-		 * @param path
-		 * @return
-		 */
-		public static VirtualFile[] getFiles(String location, VirtualFileConnection fc, boolean exceptionIfFileNotFound) throws TranslatorException {
-			VirtualFile[] files = fc.getFiles(location);
-			if (files == null && exceptionIfFileNotFound) {
+
+    public static class Util {
+
+        /**
+         * Gets the file or files, if the path is a directory, at the given path.
+         * Note the path can only refer to a single directory - directories are not recursively scanned.
+         * @param exceptionIfFileNotFound
+         * @return
+         */
+        public static VirtualFile[] getFiles(String location, VirtualFileConnection fc, boolean exceptionIfFileNotFound) throws TranslatorException {
+            VirtualFile[] files = fc.getFiles(location);
+            if (files == null && exceptionIfFileNotFound) {
                 throw new TranslatorException(DataPlugin.Util.gs("file_not_found", location)); //$NON-NLS-1$
-			}
-	        
-	        return files;
-		}
-		
-	}
-	
+            }
+
+            return files;
+        }
+
+    }
+
 }

@@ -32,9 +32,9 @@ import org.teiid.translator.jdbc.SQLConversionVisitor;
 
 public class PostgreSQLConversionVisitor
         extends SQLConversionVisitor {
-    
+
     private PostgreSQLExecutionFactory postgreSQLExecutionFactory;
-    
+
     public PostgreSQLConversionVisitor(PostgreSQLExecutionFactory ef) {
         super(ef);
         this.postgreSQLExecutionFactory = ef;
@@ -42,14 +42,14 @@ public class PostgreSQLConversionVisitor
 
     @Override
     protected void appendWithKeyword(With obj) {
-    	super.appendWithKeyword(obj);
-    	for (WithItem with : obj.getItems()) {
-    		if (with.isRecusive()) {
-    			buffer.append(SQLConstants.Tokens.SPACE);
-    			buffer.append(SQLConstants.Reserved.RECURSIVE);
-    			break;
-    		}
-    	}
+        super.appendWithKeyword(obj);
+        for (WithItem with : obj.getItems()) {
+            if (with.isRecusive()) {
+                buffer.append(SQLConstants.Tokens.SPACE);
+                buffer.append(SQLConstants.Reserved.RECURSIVE);
+                break;
+            }
+        }
     }
 
     /**
@@ -57,33 +57,33 @@ public class PostgreSQLConversionVisitor
      */
     @Override
     public void visit(DerivedColumn obj) {
-    	if (obj.getExpression() instanceof Literal) {
-    		String castType = null;
-    		if (obj.getExpression().getType() == TypeFacility.RUNTIME_TYPES.STRING) {
-    			castType = "bpchar"; //$NON-NLS-1$
-    		} else if (obj.getExpression().getType() == TypeFacility.RUNTIME_TYPES.VARBINARY) {
-    			castType = "bytea"; //$NON-NLS-1$
-    		}
-    		if (castType != null) {
-    			obj.setExpression(postgreSQLExecutionFactory.getLanguageFactory().createFunction("cast", //$NON-NLS-1$ 
-    					new Expression[] {obj.getExpression(),  postgreSQLExecutionFactory.getLanguageFactory().createLiteral(castType, TypeFacility.RUNTIME_TYPES.STRING)},
-    					TypeFacility.RUNTIME_TYPES.STRING));
-    		}
-    	} else if (obj.isProjected() && obj.getExpression() instanceof ColumnReference) {
+        if (obj.getExpression() instanceof Literal) {
+            String castType = null;
+            if (obj.getExpression().getType() == TypeFacility.RUNTIME_TYPES.STRING) {
+                castType = "bpchar"; //$NON-NLS-1$
+            } else if (obj.getExpression().getType() == TypeFacility.RUNTIME_TYPES.VARBINARY) {
+                castType = "bytea"; //$NON-NLS-1$
+            }
+            if (castType != null) {
+                obj.setExpression(postgreSQLExecutionFactory.getLanguageFactory().createFunction("cast", //$NON-NLS-1$
+                        new Expression[] {obj.getExpression(),  postgreSQLExecutionFactory.getLanguageFactory().createLiteral(castType, TypeFacility.RUNTIME_TYPES.STRING)},
+                        TypeFacility.RUNTIME_TYPES.STRING));
+            }
+        } else if (obj.isProjected() && obj.getExpression() instanceof ColumnReference) {
             ColumnReference elem = (ColumnReference)obj.getExpression();
             if (elem.getMetadataObject() != null) {
                 String nativeType = elem.getMetadataObject().getNativeType();
                 if (TypeFacility.RUNTIME_TYPES.STRING.equals(elem.getType())
                         && elem.getMetadataObject() != null
                         && nativeType != null
-                        && nativeType.equalsIgnoreCase(PostgreSQLExecutionFactory.UUID_TYPE)) { 
-                    obj.setExpression(postgreSQLExecutionFactory.getLanguageFactory().createFunction("cast", //$NON-NLS-1$ 
+                        && nativeType.equalsIgnoreCase(PostgreSQLExecutionFactory.UUID_TYPE)) {
+                    obj.setExpression(postgreSQLExecutionFactory.getLanguageFactory().createFunction("cast", //$NON-NLS-1$
                             new Expression[] {obj.getExpression(),  postgreSQLExecutionFactory.getLanguageFactory().createLiteral("varchar", TypeFacility.RUNTIME_TYPES.STRING)}, //$NON-NLS-1$
                             TypeFacility.RUNTIME_TYPES.STRING));
                 }
             }
         }
-    	super.visit(obj);
+        super.visit(obj);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class PostgreSQLConversionVisitor
         //we could introduce some conversions, but for now we'll just fail
         //some cases- there's also potential issue with date time as this logic
         //won't consider the database timezone setting
-        if (!baseType.isArray() && 
+        if (!baseType.isArray() &&
                 postgreSQLExecutionFactory.convertModifier.getSimpleTypeMapping(ConvertModifier.getCode(baseType)) != null) {
             for (Expression ex : array.getExpressions()) {
                 if (!(ex instanceof Literal)) {

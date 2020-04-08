@@ -22,44 +22,44 @@ import org.teiid.query.sql.LanguageVisitor;
 import org.teiid.query.sql.lang.Criteria;
 
 public class XMLExists extends Criteria {
-	
-	private XMLQuery xmlQuery;
-	
-	public XMLExists(XMLQuery xmlQuery) {
-		this.xmlQuery = xmlQuery;
-	}
-	
-	public XMLQuery getXmlQuery() {
-		return xmlQuery;
-	}
 
-	@Override
-	public void acceptVisitor(LanguageVisitor visitor) {
-		visitor.visit(this);
-	}
+    private XMLQuery xmlQuery;
 
-	@Override
-	public Object clone() {
-		return new XMLExists(xmlQuery.clone());
-	}
-	
-	@Override
-	public int hashCode() {
-		return xmlQuery.hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof XMLExists)) {
-			return false;
-		}
-		return xmlQuery.equals(((XMLExists)obj).getXmlQuery());
-	}
-	
+    public XMLExists(XMLQuery xmlQuery) {
+        this.xmlQuery = xmlQuery;
+    }
+
+    public XMLQuery getXmlQuery() {
+        return xmlQuery;
+    }
+
+    @Override
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public Object clone() {
+        return new XMLExists(xmlQuery.clone());
+    }
+
+    @Override
+    public int hashCode() {
+        return xmlQuery.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof XMLExists)) {
+            return false;
+        }
+        return xmlQuery.equals(((XMLExists)obj).getXmlQuery());
+    }
+
 }

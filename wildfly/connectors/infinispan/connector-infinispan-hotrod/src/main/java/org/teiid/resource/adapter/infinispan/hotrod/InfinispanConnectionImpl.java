@@ -19,137 +19,63 @@
 package org.teiid.resource.adapter.infinispan.hotrod;
 
 
-import java.util.EnumSet;
 import java.util.Map;
 
 import javax.resource.ResourceException;
 
-import org.infinispan.client.hotrod.AdminFlag;
-import org.infinispan.client.hotrod.RemoteCache;
-import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.commons.api.BasicCache;
-import org.infinispan.protostream.BaseMarshaller;
-import org.infinispan.protostream.SerializationContext;
-import org.infinispan.protostream.SerializationContext.MarshallerProvider;
+import org.teiid.infinispan.api.BaseInfinispanConnection;
 import org.teiid.infinispan.api.InfinispanConnection;
-import org.teiid.infinispan.api.InfinispanDocument;
 import org.teiid.infinispan.api.ProtobufResource;
-import org.teiid.resource.adapter.infinispan.hotrod.InfinispanManagedConnectionFactory.InfinispanConnectionFactory;
+import org.teiid.metadata.RuntimeMetadata;
+import org.teiid.metadata.Table;
 import org.teiid.resource.spi.BasicConnection;
+import org.teiid.translator.ExecutionFactory.TransactionSupport;
 import org.teiid.translator.TranslatorException;
 
-
 public class InfinispanConnectionImpl extends BasicConnection implements InfinispanConnection {
-    private RemoteCacheManager cacheManager;
-    private String cacheName;
+    private BaseInfinispanConnection bic;
 
-    private BasicCache<?, ?> defaultCache;
-    private SerializationContext ctx;
-    private ThreadAwareMarshallerProvider marshallerProvider = new ThreadAwareMarshallerProvider();
-    private InfinispanConnectionFactory icf;
-    private RemoteCacheManager scriptManager;
-    private String cacheTemplate;
-
-	public InfinispanConnectionImpl(RemoteCacheManager manager, RemoteCacheManager scriptManager, String cacheName,
-			SerializationContext ctx, InfinispanConnectionFactory icf, String cacheTemplate) throws ResourceException {
-        this.cacheManager = manager;
-        this.cacheName = cacheName;
-        this.ctx = ctx;
-        this.ctx.registerMarshallerProvider(this.marshallerProvider);
-        this.icf = icf;
-        try {
-            this.defaultCache = this.cacheManager.getCache(this.cacheName);
-        } catch (Throwable t) {
-            throw new ResourceException(t);
-        }
-        this.scriptManager = scriptManager;
-        this.cacheTemplate = cacheTemplate;
-    }
-
-    @Override
-    public void registerProtobufFile(ProtobufResource protobuf) throws TranslatorException {
-        this.icf.registerProtobufFile(protobuf);
+    public InfinispanConnectionImpl(BaseInfinispanConnection bic) {
+        this.bic = bic;
     }
 
     @Override
     public void close() throws ResourceException {
-        // do not want to close on per cache basis
-        // TODO: what needs to be done here?
-        this.ctx.unregisterMarshallerProvider(this.marshallerProvider);
+        bic.close();
     }
 
     @Override
-    public BasicCache getCache() throws TranslatorException {
-        return defaultCache;
-    }
-    
-    @Override
-    public <K, V> BasicCache<K, V> getCache(String cacheName, boolean createIfNotExists) throws TranslatorException{
-    	RemoteCache<Object, Object> cache = cacheManager.getCache(cacheName);
-    	if (cache == null && createIfNotExists) {
-    		cacheManager.administration().createCache(cacheName, this.cacheTemplate, EnumSet.of(AdminFlag.PERSISTENT));
-    		cache = cacheManager.getCache(cacheName);
-    	}
-    	return (BasicCache<K,V>)cache;
+    public <K, V> BasicCache<K, V> getCache(String cacheName)
+            throws TranslatorException {
+        return bic.getCache(cacheName);
     }
 
     @Override
-    public void registerMarshaller(BaseMarshaller<InfinispanDocument> marshaller) throws TranslatorException {
-        ThreadAwareMarshallerProvider.setMarsheller(marshaller);
+    public <K, V> BasicCache<K, V> getCache() throws TranslatorException {
+        return bic.getCache();
     }
 
     @Override
-    public void unRegisterMarshaller(BaseMarshaller<InfinispanDocument> marshaller) throws TranslatorException {
-        ThreadAwareMarshallerProvider.setMarsheller(null);
+    public void registerProtobufFile(ProtobufResource protobuf)
+            throws TranslatorException {
+        bic.registerProtobufFile(protobuf);
     }
 
-    /**
-     * The reason for thread aware marshaller is due to fact the serialization context is JVM wide, so if some other
-     * connection is also trying to register a marshaller for same object, they should not conflict.
-     */
-    static class ThreadAwareMarshallerProvider implements MarshallerProvider {
-
-        private static ThreadLocal<BaseMarshaller<?>> context = new ThreadLocal<BaseMarshaller<?>>() {
-            @Override
-            protected BaseMarshaller<?> initialValue() {
-                return null;
-            }
-        };
-
-        public static void setMarsheller(BaseMarshaller<?> marshaller) {
-            context.set(marshaller);
-        }
-
-        @Override
-        public BaseMarshaller<?> getMarshaller(String typeName) {
-            BaseMarshaller<?> m = context.get();
-            if (m != null && typeName.equals(m.getTypeName())) {
-                return context.get();
-            }
-            return null;
-        }
-
-        @Override
-        public BaseMarshaller<?> getMarshaller(Class<?> javaClass) {
-            BaseMarshaller<?> m = context.get();
-            if (m != null && javaClass.isAssignableFrom(InfinispanDocument.class)) {
-                return context.get();
-            }
-            return null;
-        }
+    @Override
+    public void registerMarshaller(Table table, RuntimeMetadata metadata)
+            throws TranslatorException {
+        bic.registerMarshaller(table, metadata);
     }
 
-	@Override
-	public <T> T execute(String scriptName, Map<String, ?> params) {
-		return scriptManager.getCache().execute(scriptName, params);
-	}
+    @Override
+    public <T> T execute(String scriptName, Map<String, ?> params) {
+        return bic.execute(scriptName, params);
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	public void registerScript(String scriptName, String script) {
-		RemoteCache cache = scriptManager.getCache("___script_cache");
-		if (cache.get(scriptName) == null) {
-			cache.put(scriptName, script);
-		}
-	}
+    @Override
+    public TransactionSupport getTransactionSupport() {
+        return bic.getTransactionSupport();
+    }
+
 }
